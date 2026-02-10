@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tripartite Hyperedge Selector (C × P × M)</title>
+  <style>
+    :root{
+      --bg:#0b1020; --panel:#0f1730; --text:#e8ecff; --muted:#9aa6d6;
+      --line:#26325a; --node:#18244a; --nodeStroke:#30407a;
+      --sel:#2d7dff; --selStroke:#9fc3ff; --warn:#ffb020; --ok:#49d17c;
+    }
+    body{ margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .wrap{ display:flex; height:100vh; }
+    #viz{ flex:1; position:relative; }
+    #panel{
+      width:420px; border-left:1px solid var(--line); background:var(--panel);
+      padding:14px; box-sizing:border-box; overflow:auto;
+    }
+    h2{ margin:0 0 8px 0; font-size:16px; }
+    .hint{ color:var(--muted); font-size:12px; line-height:1.35; margin-bottom:12px; }
+    .row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+    .pill{
+      display:inline-block; padding:4px 8px; border:1px solid var(--line); border-radius:999px;
+      color:var(--muted); font-size:12px;
+    }
+    .pill.ok{ border-color: rgba(73,209,124,.35); color: var(--ok); }
+    .pill.warn{ border-color: rgba(255,176,32,.35); color: var(--warn); }
+    .btnbar{ display:flex; gap:8px; margin-top:10px; }
+    button{
+      background:#101a38; border:1px solid var(--line); color:var(--text);
+      padding:8px 10px; border-radius:10px; cursor:pointer; font-size:12px;
+    }
+    button:hover{ border-color:#3a4a8e; }
+    textarea{
+      width:100%; height:160px; background:#0c142c; color:var(--text);
+      border:1px solid var(--line); border-radius:12px; padding:10px; box-sizing:border-box;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px; line-height:1.35;
+    }
+    svg{ width:100%; height:100%; display:block; }
+    .title{
+      position:absolute; left:12px; top:10px; right:12px;
+      display:flex; gap:10px; align-items:center;
+    }
+    .badge{
+      padding:6px 10px; border:1px solid var(--line); border-radius:10px;
+      background: rgba(15,23,48,0.65); color: var(--muted); font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="viz">
+    <div class="title">
+      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩</div>
+      <div class="badge">Rule: you can’t select 2 nodes from the same cluster</div>
+    </div>
+    <svg id="svg"></svg>
+  </div>
+
+  <aside id="panel">
+    <h2>Selection → “Cell” info</h2>
+    <div class="hint">
+      Click nodes. When you have one from each cluster, the triple key is formed and its content is shown.
+      You can store content for all 160 triples (8×4×5) in the <code>cellDB</code> object.
+    </div>
+
+    <div id="status" class="row"></div>
+    <div id="triple" class="row"></div>
+
+    <h2 style="margin-top:14px;">Content (editable)</h2>
+    <div class="hint">Edit text and click <b>Save</b>. (Stored in-memory; you can later export JSON.)</div>
+    <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
+
+    <div class="btnbar">
+      <button id="clear">Clear selection</button>
+      <button id="save">Save</button>
+      <button id="export">Export JSON</button>
+    </div>
+
+    <div id="exportOut" style="margin-top:10px;"></div>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+/**
+ * ====== Data ======
+ * Replace labels with your exact 8 categories, 4 perspectives, 5 models.
+ */
+const categories = [
+  "Data & Computation",
+  "Virtualization",
+  "Internet & Services",
+  "Network",
+  "Access Control",
+  "Software",
+  "Trust Management",
+  "Compliance & Legal"
+];
+
+const perspectives = ["Requirement", "Challenge", "Issue", "Solution"];
+
+const models = ["SUM", "SAM", "SPM", "SRM", "SDM"];
+
+/**
+ * cellDB stores content keyed by "Category|Perspective|Model"
+ * You can pre-fill some examples. Everything else defaults to empty.
+ */
+const cellDB = {
+  "Data & Computation|Issue|SAM": [
+    "Application-level data issues (SAM scope):",
+    "- Unsafe handling of sensitive data inside components",
+    "- Insecure or ambiguous data flows between components",
+    "- Dependency-driven risks impacting computation correctness",
+  ].join("\n"),
+  "Access Control|Requirement|SRM": [
+    "Rule-level access requirements (SRM scope):",
+    "- Formal least-privilege constraints",
+    "- Separation-of-duties constraints",
+    "- Enforceable policy statements derived from SUM/SAM/SPM",
+  ].join("\n"),
+};
+
+/**
+ * ====== Layout ======
+ */
+const svg = d3.select("#svg");
+const viz = document.getElementById("viz");
+const width = () => viz.clientWidth;
+const height = () => viz.clientHeight;
+
+const colX = (W) => ({
+  C: Math.round(W * 0.18),
+  P: Math.round(W * 0.50),
+  M: Math.round(W * 0.82),
+});
+
+const nodeR = 18;
+const vGap = 64;
+
+/**
+ * Build nodes with cluster type
+ */
+function buildNodes(W, H){
+  const xs = colX(W);
+  const top = 100;
+
+  const yPositions = (n) => Array.from({length:n}, (_,i)=> top + i*vGap);
+
+  const nodes = [
+    ...categories.map((name,i)=> ({ id:`C:${name}`, name, cluster:"C", x: xs.C, y: yPositions(categories.length)[i] })),
+    ...perspectives.map((name,i)=> ({ id:`P:${name}`, name, cluster:"P", x: xs.P, y: yPositions(perspectives.length)[i] })),
+    ...models.map((name,i)=> ({ id:`M:${name}`, name, cluster:"M", x: xs.M, y: yPositions(models.length)[i] })),
+  ];
+
+  return nodes;
+}
+
+/**
+ * Selection state:
+ * selectedByCluster = { C: node or null, P: node or null, M: node or null }
+ */
+let selectedByCluster = { C:null, P:null, M:null };
+
+function keyForTriple(){
+  const c = selectedByCluster.C?.name;
+  const p = selectedByCluster.P?.name;
+  const m = selectedByCluster.M?.name;
+  if(!c || !p || !m) return null;
+  return `${c}|${p}|${m}`;
+}
+
+function updatePanel(){
+  const status = document.getElementById("status");
+  const triple = document.getElementById("triple");
+  const content = document.getElementById("content");
+
+  status.innerHTML = "";
+  triple.innerHTML = "";
+
+  const mkPill = (label, value, ok) => {
+    const span = document.createElement("span");
+    span.className = `pill ${ok ? "ok" : "warn"}`;
+    span.textContent = `${label}: ${value ?? "—"}`;
+    return span;
+  };
+
+  status.appendChild(mkPill("Category", selectedByCluster.C?.name, !!selectedByCluster.C));
+  status.appendChild(mkPill("Perspective", selectedByCluster.P?.name, !!selectedByCluster.P));
+  status.appendChild(mkPill("Model", selectedByCluster.M?.name, !!selectedByCluster.M));
+
+  const k = keyForTriple();
+  if(k){
+    const span = document.createElement("span");
+    span.className = "pill ok";
+    span.textContent = `Triple key: ⟨${selectedByCluster.C.name}, ${selectedByCluster.P.name}, ${selectedByCluster.M.name}⟩`;
+    triple.appendChild(span);
+
+    content.value = cellDB[k] ?? "";
+    content.disabled = false;
+  } else {
+    const span = document.createElement("span");
+    span.className = "pill warn";
+    span.textContent = "Select one node from each cluster to form a triple.";
+    triple.appendChild(span);
+
+    content.value = "";
+    content.disabled = true;
+  }
+}
+
+function clearSelection(){
+  selectedByCluster = { C:null, P:null, M:null };
+  render(); // re-render to update styles
+  updatePanel();
+}
+
+function toggleNode(node){
+  // Enforce "only 1 selected per cluster":
+  const cl = node.cluster;
+  const already = selectedByCluster[cl];
+
+  // Clicking the already-selected node unselects it
+  if(already && already.id === node.id){
+    selectedByCluster[cl] = null;
+  } else {
+    // Otherwise, select this node and replace previous in same cluster
+    selectedByCluster[cl] = node;
+  }
+
+  render();
+  updatePanel();
+}
+
+/**
+ * ====== Render ======
+ */
+function render(){
+  const W = width(), H = height();
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+  const nodes = buildNodes(W, H);
+
+  // background
+  svg.selectAll("rect.bg").data([0]).join("rect")
+    .attr("class","bg")
+    .attr("x",0).attr("y",0).attr("width",W).attr("height",H)
+    .attr("fill","#0b1020");
+
+  // cluster labels
+  const labels = [
+    {x: colX(W).C, y: 60, t:"Categories"},
+    {x: colX(W).P, y: 60, t:"Perspectives"},
+    {x: colX(W).M, y: 60, t:"Models"},
+  ];
+
+  svg.selectAll("text.clusterLabel").data(labels).join("text")
+    .attr("class","clusterLabel")
+    .attr("x",d=>d.x).attr("y",d=>d.y)
+    .attr("text-anchor","middle")
+    .attr("fill","#9aa6d6")
+    .attr("font-size",14)
+    .attr("font-weight",600)
+    .text(d=>d.t);
+
+  // helper: is selected?
+  const isSelected = (n) => selectedByCluster[n.cluster]?.id === n.id;
+
+  // node groups
+  const g = svg.selectAll("g.node").data(nodes, d=>d.id).join(
+    enter => {
+      const gg = enter.append("g").attr("class","node").style("cursor","pointer");
+      gg.append("circle");
+      gg.append("text");
+      return gg;
+    }
+  );
+
+  g.attr("transform", d => `translate(${d.x},${d.y})`)
+   .on("click", (event, d) => toggleNode(d));
+
+  g.select("circle")
+    .attr("r", nodeR)
+    .attr("fill", d => isSelected(d) ? "var(--sel)" : "var(--node)")
+    .attr("stroke", d => isSelected(d) ? "var(--selStroke)" : "var(--nodeStroke)")
+    .attr("stroke-width", d => isSelected(d) ? 3 : 1.5);
+
+  // labels (to the right of circles)
+  g.select("text")
+    .attr("x", nodeR + 10)
+    .attr("y", 5)
+    .attr("fill", d => isSelected(d) ? "#e8ecff" : "#c9d2ff")
+    .attr("font-size", 12)
+    .text(d => d.name);
+
+  // faint guide lines between columns (just structure, not edges)
+  const xs = colX(W);
+  svg.selectAll("line.guides").data([xs.C, xs.P, xs.M]).join("line")
+    .attr("class","guides")
+    .attr("x1",d=>d).attr("x2",d=>d)
+    .attr("y1",80).attr("y2",H-30)
+    .attr("stroke","#14204a").attr("stroke-width",1);
+
+  // if triple complete, draw a subtle connector (optional, to emphasize "edge")
+  const k = keyForTriple();
+  const selNodes = [selectedByCluster.C, selectedByCluster.P, selectedByCluster.M].filter(Boolean);
+
+  const linkData = (k && selNodes.length===3)
+    ? [
+        { a:selectedByCluster.C, b:selectedByCluster.P },
+        { a:selectedByCluster.P, b:selectedByCluster.M },
+      ]
+    : [];
+
+  const links = svg.selectAll("path.selLink").data(linkData, d=>d.a.id+"->"+d.b.id).join("path")
+    .attr("class","selLink")
+    .attr("fill","none")
+    .attr("stroke","rgba(157,190,255,0.55)")
+    .attr("stroke-width",2.2);
+
+  links.attr("d", d => {
+    const x1=d.a.x, y1=d.a.y;
+    const x2=d.b.x, y2=d.b.y;
+    const mx=(x1+x2)/2;
+    // cubic bezier curve
+    return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+  });
+}
+
+/**
+ * ====== Buttons ======
+ */
+document.getElementById("clear").addEventListener("click", () => clearSelection());
+
+document.getElementById("save").addEventListener("click", () => {
+  const k = keyForTriple();
+  if(!k) return;
+  const txt = document.getElementById("content").value ?? "";
+  cellDB[k] = txt;
+  // small feedback
+  const out = document.getElementById("exportOut");
+  out.innerHTML = `<div class="pill ok">Saved for key: ${k}</div>`;
+  setTimeout(()=> out.innerHTML="", 1500);
+});
+
+document.getElementById("export").addEventListener("click", () => {
+  const out = document.getElementById("exportOut");
+  const json = JSON.stringify(cellDB, null, 2);
+  out.innerHTML = `
+    <div class="pill ok">Exported JSON below (copy it)</div>
+    <textarea readonly>${json.replace(/</g,"&lt;")}</textarea>
+  `;
+});
+
+/**
+ * ====== Init ======
+ */
+window.addEventListener("resize", () => render());
+render();
+updatePanel();
+</script>
+</body>
+</html>
