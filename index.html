@@ -56,7 +56,7 @@
 <div class="wrap">
   <div id="viz">
     <div class="title">
-      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩. You can’t select 2 nodes from the same cluster</div>
+      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩</div>
     </div>
     <svg id="svg"></svg>
   </div>
@@ -64,15 +64,14 @@
   <aside id="panel">
     <h2>Selection → “Cell” info</h2>
     <div class="hint">
-      Click nodes. When you have one from each cluster, the triple key is formed and its content is shown.
-      You can store content for all 160 triples (8×4×5) in the <code>cellDB</code> object.
+      Click nodes. When you have one from each cluster, the triple key is formed and its content is shown. We have 160 triples (8×4×5) in the <code>cellDB</code> object.
     </div>
 
     <div id="status" class="row"></div>
     <div id="triple" class="row"></div>
 
     <h2 style="margin-top:14px;">Content (editable)</h2>
-    <div class="hint">You can later export JSON.)</div>
+    <div class="hint">You can Edit and export JSON.</div>
     <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
 
     <div class="btnbar">
