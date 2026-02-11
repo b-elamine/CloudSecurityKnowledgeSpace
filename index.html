@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
   <title>CloudSec Graph</title>
   <style>
     :root{
@@ -10,461 +10,663 @@
       --line:#26325a; --node:#18244a; --nodeStroke:#30407a;
       --sel:#2d7dff; --selStroke:#9fc3ff; --warn:#ffb020; --ok:#49d17c;
     }
-    body{ margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
-    .wrap{ display:flex; height:100vh; }
-    #viz{ flex:1; position:relative; }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body{ 
+      margin:0; 
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; 
+      background:var(--bg); 
+      color:var(--text);
+      overflow: hidden;
+      touch-action: pan-x pan-y;
+    }
+    
+    .wrap{ 
+      display:flex; 
+      height:100vh; 
+      height:100dvh; /* Dynamic viewport height for mobile */
+    }
+    
+    #viz{ 
+      flex:1; 
+      position:relative; 
+      overflow: hidden;
+      min-width: 0; /* Prevent flex overflow */
+    }
+    
     #panel{
-      width:30%; border-left:1px solid var(--line); background:var(--panel);
-      padding:14px; box-sizing:border-box; overflow:auto;
+      width: 35%;
+      min-width: 280px;
+      max-width: 400px;
+      border-left:1px solid var(--line); 
+      background:var(--panel);
+      padding:12px; 
+      overflow-y:auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
-    h2{ margin:0 0 8px 0; font-size:16px; }
-    .hint{ color:var(--muted); font-size:12px; line-height:1.35; margin-bottom:12px; }
-    .row{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+    
+    h2{ 
+      margin:0 0 6px 0; 
+      font-size:14px; 
+      font-weight: 600;
+    }
+    
+    .hint{ 
+      color:var(--muted); 
+      font-size:11px; 
+      line-height:1.4; 
+      margin-bottom:10px; 
+    }
+    
+    .row{ 
+      display:flex; 
+      gap:6px; 
+      flex-wrap:wrap; 
+      margin:8px 0; 
+    }
+    
     .pill{
-      display:inline-block; padding:4px 8px; border:1px solid var(--line); border-radius:999px;
-      color:var(--muted); font-size:12px;
+      display:inline-block; 
+      padding:3px 7px; 
+      border:1px solid var(--line); 
+      border-radius:999px;
+      color:var(--muted); 
+      font-size:10px;
+      white-space: nowrap;
     }
-    .pill.ok{ border-color: rgba(73,209,124,.35); color: var(--ok); }
-    .pill.warn{ border-color: rgba(255,176,32,.35); color: var(--warn); }
-    .btnbar{ display:flex; gap:8px; margin-top:10px; }
+    
+    .pill.ok{ 
+      border-color: rgba(73,209,124,.35); 
+      color: var(--ok); 
+    }
+    
+    .pill.warn{ 
+      border-color: rgba(255,176,32,.35); 
+      color: var(--warn); 
+    }
+    
+    .btnbar{ 
+      display:flex; 
+      gap:6px; 
+      margin-top:8px; 
+    }
+    
     button{
-      background:#101a38; border:1px solid var(--line); color:var(--text);
-      padding:8px 10px; border-radius:10px; cursor:pointer; font-size:12px;
+      background:#101a38; 
+      border:1px solid var(--line); 
+      color:var(--text);
+      padding:7px 9px; 
+      border-radius:8px; 
+      cursor:pointer; 
+      font-size:11px;
+      flex: 1;
+      touch-action: manipulation;
+      min-height: 36px;
     }
-    button:hover{ border-color:#3a4a8e; }
+    
+    button:hover, button:active{ 
+      border-color:#3a4a8e; 
+      background:#142045;
+    }
+    
     textarea{
-      width:100%; height:70%; background:#0c142c; color:var(--text);
-      border:1px solid var(--line); border-radius:12px; padding:10px; box-sizing:border-box;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px; line-height:1.35;
+      width:100%; 
+      min-height: 120px;
+      background:#0c142c; 
+      color:var(--text);
+      border:1px solid var(--line); 
+      border-radius:10px; 
+      padding:8px; 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size:10px; 
+      line-height:1.4;
+      resize: vertical;
     }
-    svg{ width:100%; height:100%; display:block; }
+    
+    svg{ 
+      width:100%; 
+      height:100%; 
+      display:block; 
+      touch-action: none;
+    }
+    
     .title{
-      position:absolute; left:12px; top:10px; right:12px;
-      display:flex; gap:10px; align-items:center;
-      width: 100%;
+      position:absolute; 
+      left:8px; 
+      top:6px; 
+      right:8px;
+      display:flex; 
+      gap:8px; 
+      align-items:center;
+      pointer-events: none;
     }
+    
     .badge{
-      padding:6px 10px; border:1px solid var(--line); border-radius:10px;
-      background: rgba(15,23,48,0.65); color: var(--muted); font-size: 14px;
+      padding:5px 8px; 
+      border:1px solid var(--line); 
+      border-radius:8px;
+      background: rgba(15,23,48,0.85); 
+      color: var(--muted); 
+      font-size: 11px;
       margin:0 auto;
-      justify-content: center;
+      text-align: center;
+      max-width: 90%;
+      line-height: 1.3;
     }
+    
+    #contentView {
+      margin-bottom:10px; 
+      font-style:italic; 
+      color: var(--ok);
+      font-size: 11px;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    
+    #exportOut {
+      margin-top:8px;
+    }
+    
+    #exportOut textarea {
+      min-height: 100px;
+      font-size: 9px;
+    }
+    
+    /* Rotation gate - show only in portrait mode */
     .rotateGate{
-  position: fixed; inset: 0;
-  display: none;
-  align-items: center; justify-content: center;
-  background: rgba(11,16,32,.92);
-  z-index: 9999;
-  padding: 18px;
-}
-.rotateCard{
-  max-width: 520px;
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--panel);
-  padding: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.35);
-}
-.rotateTitle{
-  font-weight: 800;
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-.rotateText{
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-/* Optionnel: sur petits écrans, évite la sélection de texte accidentelle */
-@media (max-width: 820px){
-  body{ -webkit-tap-highlight-color: transparent; }
-}
-
+      position: fixed; 
+      inset: 0;
+      display: none;
+      align-items: center; 
+      justify-content: center;
+      background: rgba(11,16,32,.95);
+      z-index: 9999;
+      padding: 20px;
+    }
+    
+    .rotateCard{
+      max-width: 340px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 20px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.4);
+      text-align: center;
+    }
+    
+    .rotateTitle{
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .rotateText{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    .rotateIcon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.8;
+    }
+    
+    /* Mobile landscape optimizations */
+    @media (max-width: 900px) and (orientation: landscape) {
+      #panel {
+        width: 40%;
+        min-width: 240px;
+        padding: 10px;
+      }
+      
+      h2 {
+        font-size: 13px;
+      }
+      
+      .hint {
+        font-size: 10px;
+      }
+      
+      .badge {
+        font-size: 10px;
+        padding: 4px 6px;
+      }
+      
+      button {
+        font-size: 10px;
+        padding: 6px 8px;
+        min-height: 32px;
+      }
+    }
+    
+    /* Show rotation prompt in portrait mode */
+    @media (orientation: portrait) {
+      .rotateGate {
+        display: flex !important;
+      }
+      
+      .wrap {
+        display: none;
+      }
+    }
+    
+    /* Extra small landscape screens */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .title {
+        top: 4px;
+      }
+      
+      .badge {
+        font-size: 9px;
+        padding: 3px 5px;
+      }
+      
+      #panel {
+        padding: 8px;
+      }
+      
+      h2 {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      
+      .hint {
+        font-size: 9px;
+        margin-bottom: 6px;
+      }
+      
+      textarea {
+        min-height: 80px;
+        font-size: 9px;
+      }
+      
+      button {
+        padding: 5px 7px;
+        font-size: 9px;
+        min-height: 28px;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="rotateGate" class="rotateGate" aria-hidden="true">
-  <div class="rotateCard">
-    <div class="rotateTitle">Tourne ton téléphone</div>
-    <div class="rotateText">Passe en mode paysage (landscape) pour utiliser l’app comme sur un laptop.</div>
-  </div>
-</div>
-
-<div class="wrap">
-  <div id="viz">
-    <div class="title">
-      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩</div>
+    <div class="rotateCard">
+      <div class="rotateIcon">📱 ↻</div>
+      <div class="rotateTitle">Rotate Your Device</div>
+      <div class="rotateText">Please switch to landscape mode to use this application.</div>
     </div>
-    <svg id="svg"></svg>
   </div>
 
-  <aside id="panel">
-    <h2>Selection → “Cell” info</h2>
-    <div class="hint">
-      Click nodes. When you have one from each cluster, the triple key is formed and its content is shown. We have 160 triples (8×4×5) in the <code>cellDB</code> object.
+  <div class="wrap">
+    <div id="viz">
+      <div class="title">
+        <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩</div>
+      </div>
+      <svg id="svg"></svg>
     </div>
 
-    <div id="status" class="row"></div>
-    <div id="triple" class="row"></div>
+    <aside id="panel">
+      <h2>Selection → "Cell" info</h2>
+      <div class="hint">
+        Tap nodes. When you have one from each cluster, the triple key is formed and its content is shown.
+      </div>
 
-    <h2 style="margin-top:14px;">Content (editable)</h2>
-    <div class="hint">You can Edit and export JSON.</div>
-    <div id="contentView"
-      style="margin-bottom:15px; font-style:italic; color: var(--ok);">
-    </div>
-    <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
+      <div id="status" class="row"></div>
+      <div id="triple" class="row"></div>
 
-    <div class="btnbar">
-      <button id="clear">Clear selection</button>
-      <button id="export">Export JSON</button>
-    </div>
+      <h2 style="margin-top:10px;">Content (editable)</h2>
+      <div class="hint">You can edit and export JSON.</div>
+      <div id="contentView"></div>
+      <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
 
-    <div id="exportOut" style="margin-top:10px;"></div>
-  </aside>
-</div>
+      <div class="btnbar">
+        <button id="clear">Clear</button>
+        <button id="export">Export</button>
+      </div>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script>
-/**
- * ====== Data ======
- * Replace labels with your exact 8 categories, 4 perspectives, 5 models.
- */
-const categories = [
-  "Data & Computation",
-  "Virtualization",
-  "Internet & Services",
-  "Network",
-  "Access Control",
-  "Software",
-  "Trust Management",
-  "Compliance & Legal"
-];
+      <div id="exportOut"></div>
+    </aside>
+  </div>
 
-const models = ["SUM", "SAM", "SPM", "SRM", "SDM"];
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>
+    /**
+     * ====== Data ======
+     */
+    const categories = [
+      "Data & Computation",
+      "Virtualization",
+      "Internet & Services",
+      "Network",
+      "Access Control",
+      "Software",
+      "Trust Management",
+      "Compliance & Legal"
+    ];
 
-const perspectives = ["Requirement", "Challenge", "Issue", "Solution"];
+    const models = ["SUM", "SAM", "SPM", "SRM", "SDM"];
+    const perspectives = ["Requirement", "Challenge", "Issue", "Solution"];
 
+    let cellDB = {};
 
-/**
- * cellDB stores content keyed by "Category|Perspective|Model"
- */
-
-  /* ===================== Data & Computation ===================== */
-
-
-
-// const cellDB = {
-let cellDB = {};
-
-async function loadCellDB() {
-  const res = await fetch("./cellDB.json");
-  if (!res.ok) throw new Error(`HTTP ${res.status} loading cellDB.json`);
-  cellDB = await res.json();
-  console.log("cellDB loaded:", cellDB);
-}
-
-function getCellText(key) {
-  const v = cellDB[key];
-  return Array.isArray(v) ? v.join("\n") : (v ?? "");
-}
-
-loadCellDB();
-
-
-/**
- * ====== Layout ======
- */
-const svg = d3.select("#svg");
-const viz = document.getElementById("viz");
-const width = () => viz.clientWidth;
-const height = () => viz.clientHeight;
-
-const colX = (W) => ({
-  C: Math.round(W * 0.18),
-  M: Math.round(W * 0.50),
-  P: Math.round(W * 0.820),
-});
-
-const nodeR = 18;
-const vGap = 100;
-
-/**
- * Build nodes with cluster type
- */
-function buildNodes(W, H) {
-  const xs = colX(W);
-
-  // Responsive vertical layout parameters
-  const topPad = 110;     // space for title/labels
-  const bottomPad = 40;   // space at bottom
-  const minGap = 48;      // prevent nodes from getting too close
-  const maxGap = 120;     // prevent huge gaps on tall screens
-
-  function yPositions(count) {
-    if (count <= 0) return [];
-    if (count === 1) return [Math.round((topPad + (H - bottomPad)) / 2)];
-
-    const usable = Math.max(0, (H - bottomPad) - topPad);
-    let gap = usable / (count - 1);
-    gap = Math.max(minGap, Math.min(maxGap, gap));
-
-    // If we clamped gap (min/max), re-center the block vertically
-    const block = gap * (count - 1);
-    const start = Math.round(topPad + (usable - block) / 2);
-
-    return Array.from({ length: count }, (_, i) => start + i * gap);
-  }
-
-  const yC = yPositions(categories.length);
-  const yM = yPositions(models.length);
-  const yP = yPositions(perspectives.length);
-
-  return [
-    ...categories.map((name, i) => ({
-      id: `C:${name}`, name, cluster: "C", x: xs.C, y: yC[i]
-    })),
-    ...models.map((name, i) => ({
-      id: `M:${name}`, name, cluster: "M", x: xs.M, y: yM[i]
-    })),
-    ...perspectives.map((name, i) => ({
-      id: `P:${name}`, name, cluster: "P", x: xs.P, y: yP[i]
-    })),
-  ];
-}
-
-
-/**
- * Selection state:
- * selectedByCluster = { C: node or null, P: node or null, M: node or null }
- */
-let selectedByCluster = { C:null, M:null, P:null };
-
-function keyForTriple(){
-  const c = selectedByCluster.C?.name;
-  const m = selectedByCluster.M?.name;
-  const p = selectedByCluster.P?.name;
-
-  if(!c || !p || !m) return null;
-  return `${c}|${p}|${m}`;
-}
-
-function updatePanel(){
-  const status = document.getElementById("status");
-  const triple = document.getElementById("triple");
-  const content = document.getElementById("content");
-
-  status.innerHTML = "";
-  triple.innerHTML = "";
-
-  const mkPill = (label, value, ok) => {
-    const span = document.createElement("span");
-    span.className = `pill ${ok ? "ok" : "warn"}`;
-    span.textContent = `${label}: ${value ?? "—"}`;
-    return span;
-  };
-
-  status.appendChild(mkPill("Category", selectedByCluster.C?.name, !!selectedByCluster.C));
-  status.appendChild(mkPill("Model", selectedByCluster.M?.name, !!selectedByCluster.M));
-  status.appendChild(mkPill("Perspective", selectedByCluster.P?.name, !!selectedByCluster.P));
-
-
-  const k = keyForTriple();
-  if(k){
-    const span = document.createElement("span");
-    span.className = "pill ok";
-    span.textContent = `Triple key: ⟨${selectedByCluster.C.name}, ${selectedByCluster.M.name},  ${selectedByCluster.P.name}⟩`;
-    triple.appendChild(span);
-
-    content.value = getCellText(k);
-
-  const v = cellDB[k];
-  document.getElementById("contentView").innerHTML =
-    `<math><mi>f</mi></math><mi>(<math></mi><mi>c</mi>,<mi>m</mi>,<mi>p</mi>⟩ = </math><strong>${v[0]}</strong>`;
-    content.disabled = false;
-    content.value = v.slice(1).join("\n");
-    content.disabled = false;
-
-
-  } else {
-    const span = document.createElement("span");
-    span.className = "pill warn";
-    span.textContent = "Select one node from each cluster to form a triple.";
-    triple.appendChild(span);
-
-    content.value = "";
-    content.disabled = true;
-    document.getElementById("contentView").innerHTML = "<math><mi>f</mi></math><mi>(<math></mi><mi>c</mi>,<mi>m</mi>,<mi>p</mi>⟩ = null (select nodes)</math>";
-    content.value = "";
-    content.disabled = true;
-
-  }
-}
-
-function clearSelection(){
-  selectedByCluster = { C:null, M:null, P:null };
-  render(); // re-render to update styles
-  updatePanel();
-}
-
-function toggleNode(node){
-  // Enforce "only 1 selected per cluster":
-  const cl = node.cluster;
-  const already = selectedByCluster[cl];
-
-  // Clicking the already-selected node unselects it
-  if(already && already.id === node.id){
-    selectedByCluster[cl] = null;
-  } else {
-    // Otherwise, select this node and replace previous in same cluster
-    selectedByCluster[cl] = node;
-  }
-
-  render();
-  updatePanel();
-}
-
-/**
- * ====== Render ======
- */
-function render(){
-  const W = width(), H = height();
-  svg.attr("viewBox", `0 0 ${W} ${H}`);
-
-  const nodes = buildNodes(W, H);
-
-  // background
-  svg.selectAll("rect.bg").data([0]).join("rect")
-    .attr("class","bg")
-    .attr("x",0).attr("y",0).attr("width",W).attr("height",H)
-    .attr("fill","#0b1020");
-
-  // cluster labels
-  const labels = [
-    {x: colX(W).C, y: 60, t:"Categories"},
-    {x: colX(W).M, y: 60, t:"Models"},
-    {x: colX(W).P, y: 60, t:"Perspectives"},
-
-  ];
-
-  svg.selectAll("text.clusterLabel").data(labels).join("text")
-    .attr("class","clusterLabel")
-    .attr("x",d=>d.x).attr("y",d=>d.y)
-    .attr("text-anchor","middle")
-    .attr("fill","#9aa6d6")
-    .attr("font-size",14)
-    .attr("font-weight",600)
-    .text(d=>d.t);
-
-  // helper: is selected?
-  const isSelected = (n) => selectedByCluster[n.cluster]?.id === n.id;
-
-    // faint guide lines between columns (just structure, not edges)
-  const xs = colX(W);
-  svg.selectAll("line.guides").data([xs.C, xs.M, xs.P]).join("line")
-    .attr("class","guides")
-    .attr("x1",d=>d).attr("x2",d=>d)
-    .attr("y1",80).attr("y2",H-30)
-    .attr("stroke","#6b6b6b").attr("stroke-width",2);
-
-  // node groups
-  const g = svg.selectAll("g.node").data(nodes, d=>d.id).join(
-    enter => {
-      const gg = enter.append("g").attr("class","node").style("cursor","pointer");
-      gg.append("circle");
-      gg.append("text");
-      return gg;
+    async function loadCellDB() {
+      try {
+        const res = await fetch("./cellDB.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status} loading cellDB.json`);
+        cellDB = await res.json();
+        console.log("cellDB loaded:", cellDB);
+      } catch(e) {
+        console.warn("Could not load cellDB.json, using empty database", e);
+        cellDB = {};
+      }
     }
-  );
 
-  g.attr("transform", d => `translate(${d.x},${d.y})`)
- .on("click", (event, d) => toggleNode(d))
- .on("mouseenter", function(event, d) {
-    if (!isSelected(d)) {
-      d3.select(this).select("circle")
-        .attr("fill", "rgba(157,190,255,1)")   // hover color
-        .attr("stroke", "var(--selStroke)")
+    function getCellText(key) {
+      const v = cellDB[key];
+      return Array.isArray(v) ? v.join("\n") : (v ?? "");
+    }
+
+    /**
+     * ====== Layout ======
+     */
+    const svg = d3.select("#svg");
+    const viz = document.getElementById("viz");
+    const width = () => viz.clientWidth;
+    const height = () => viz.clientHeight;
+
+    const colX = (W) => ({
+      C: Math.round(W * 0.18),
+      M: Math.round(W * 0.50),
+      P: Math.round(W * 0.82),
+    });
+
+    const nodeR = () => {
+      const w = width();
+      if (w < 600) return 12;
+      if (w < 800) return 14;
+      return 16;
+    };
+
+    function buildNodes(W, H) {
+      const xs = colX(W);
+      const topPad = Math.max(60, H * 0.12);
+      const bottomPad = Math.max(30, H * 0.08);
+      const minGap = 35;
+      const maxGap = 100;
+
+      function yPositions(count) {
+        if (count <= 0) return [];
+        if (count === 1) return [Math.round((topPad + (H - bottomPad)) / 2)];
+
+        const usable = Math.max(0, (H - bottomPad) - topPad);
+        let gap = usable / (count - 1);
+        gap = Math.max(minGap, Math.min(maxGap, gap));
+
+        const block = gap * (count - 1);
+        const start = Math.round(topPad + (usable - block) / 2);
+
+        return Array.from({ length: count }, (_, i) => start + i * gap);
+      }
+
+      const yC = yPositions(categories.length);
+      const yM = yPositions(models.length);
+      const yP = yPositions(perspectives.length);
+
+      return [
+        ...categories.map((name, i) => ({
+          id: `C:${name}`, name, cluster: "C", x: xs.C, y: yC[i]
+        })),
+        ...models.map((name, i) => ({
+          id: `M:${name}`, name, cluster: "M", x: xs.M, y: yM[i]
+        })),
+        ...perspectives.map((name, i) => ({
+          id: `P:${name}`, name, cluster: "P", x: xs.P, y: yP[i]
+        })),
+      ];
+    }
+
+    /**
+     * ====== Selection State ======
+     */
+    let selectedByCluster = { C: null, M: null, P: null };
+
+    function keyForTriple() {
+      const c = selectedByCluster.C?.name;
+      const m = selectedByCluster.M?.name;
+      const p = selectedByCluster.P?.name;
+
+      if (!c || !p || !m) return null;
+      return `${c}|${p}|${m}`;
+    }
+
+    function updatePanel() {
+      const status = document.getElementById("status");
+      const triple = document.getElementById("triple");
+      const content = document.getElementById("content");
+
+      status.innerHTML = "";
+      triple.innerHTML = "";
+
+      const mkPill = (label, value, ok) => {
+        const span = document.createElement("span");
+        span.className = `pill ${ok ? "ok" : "warn"}`;
+        span.textContent = `${label}: ${value ?? "—"}`;
+        return span;
+      };
+
+      status.appendChild(mkPill("Category", selectedByCluster.C?.name, !!selectedByCluster.C));
+      status.appendChild(mkPill("Model", selectedByCluster.M?.name, !!selectedByCluster.M));
+      status.appendChild(mkPill("Perspective", selectedByCluster.P?.name, !!selectedByCluster.P));
+
+      const k = keyForTriple();
+      if (k) {
+        const span = document.createElement("span");
+        span.className = "pill ok";
+        span.textContent = `⟨${selectedByCluster.C.name}, ${selectedByCluster.M.name}, ${selectedByCluster.P.name}⟩`;
+        triple.appendChild(span);
+
+        const v = cellDB[k];
+        if (Array.isArray(v) && v.length > 0) {
+          document.getElementById("contentView").innerHTML =
+            `<math><mi>f</mi> <mi>(</mi> <mi>c, </mi><mi>m, </mi>,<mi>p</mi><mi>)</mi></math> = <strong>${v[0]}</strong>`;
+          content.value = v.slice(1).join("\n");
+        } else {
+          document.getElementById("contentView").innerHTML =
+            `<math><mi>f</mi> <mi>(</mi> <mi>c, </mi><mi>m, </mi>,<mi>p</mi><mi>)</mi></math> = <em>No data</em>`;
+          content.value = "";
+        }
+        content.disabled = false;
+      } else {
+        const span = document.createElement("span");
+        span.className = "pill warn";
+        span.textContent = "Select one node from each cluster";
+        triple.appendChild(span);
+
+        document.getElementById("contentView").innerHTML = 
+          "<math><mi>f</mi> <mi>(</mi> <mi>c, </mi><mi>m, </mi>,<mi>p</mi><mi>)</mi></math> = null";
+        content.value = "";
+        content.disabled = true;
+      }
+    }
+
+    function clearSelection() {
+      selectedByCluster = { C: null, M: null, P: null };
+      render();
+      updatePanel();
+    }
+
+    function toggleNode(node) {
+      const cl = node.cluster;
+      const already = selectedByCluster[cl];
+
+      if (already && already.id === node.id) {
+        selectedByCluster[cl] = null;
+      } else {
+        selectedByCluster[cl] = node;
+      }
+
+      render();
+      updatePanel();
+    }
+
+    /**
+     * ====== Render ======
+     */
+    function render() {
+      const W = width(), H = height();
+      svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+      const nodes = buildNodes(W, H);
+      const r = nodeR();
+      const fontSize = Math.max(9, r * 0.75);
+
+      // Background
+      svg.selectAll("rect.bg").data([0]).join("rect")
+        .attr("class", "bg")
+        .attr("x", 0).attr("y", 0).attr("width", W).attr("height", H)
+        .attr("fill", "#0b1020");
+
+      // Cluster labels
+      const labelY = Math.max(35, H * 0.08);
+      const labels = [
+        { x: colX(W).C, y: labelY, t: "Categories" },
+        { x: colX(W).M, y: labelY, t: "Models" },
+        { x: colX(W).P, y: labelY, t: "Perspectives" },
+      ];
+
+      svg.selectAll("text.clusterLabel").data(labels).join("text")
+        .attr("class", "clusterLabel")
+        .attr("x", d => d.x).attr("y", d => d.y)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#9aa6d6")
+        .attr("font-size", Math.max(11, fontSize + 2))
+        .attr("font-weight", 600)
+        .text(d => d.t);
+
+      // Guide lines
+      const xs = colX(W);
+      svg.selectAll("line.guides").data([xs.C, xs.M, xs.P]).join("line")
+        .attr("class", "guides")
+        .attr("x1", d => d).attr("x2", d => d)
+        .attr("y1", labelY + 15).attr("y2", H - 20)
+        .attr("stroke", "#1a2540").attr("stroke-width", 1.5);
+
+      const isSelected = (n) => selectedByCluster[n.cluster]?.id === n.id;
+
+      // Node groups
+      const g = svg.selectAll("g.node").data(nodes, d => d.id).join(
+        enter => {
+          const gg = enter.append("g").attr("class", "node").style("cursor", "pointer");
+          gg.append("circle");
+          gg.append("text");
+          return gg;
+        }
+      );
+
+      g.attr("transform", d => `translate(${d.x},${d.y})`)
+        .on("click", (event, d) => {
+          event.preventDefault();
+          toggleNode(d);
+        })
+        .on("touchstart", function(event, d) {
+          event.preventDefault();
+          if (!isSelected(d)) {
+            d3.select(this).select("circle")
+              .attr("fill", "rgba(157,190,255,0.6)")
+              .attr("stroke", "var(--selStroke)")
+              .attr("stroke-width", 2);
+          }
+        })
+        .on("touchend", function(event, d) {
+          event.preventDefault();
+          toggleNode(d);
+          if (!isSelected(d)) {
+            d3.select(this).select("circle")
+              .attr("fill", "var(--node)")
+              .attr("stroke", "var(--nodeStroke)")
+              .attr("stroke-width", 1.5);
+          }
+        });
+
+      g.select("circle")
+        .attr("r", r)
+        .attr("fill", d => isSelected(d) ? "var(--sel)" : "var(--node)")
+        .attr("stroke", d => isSelected(d) ? "var(--selStroke)" : "var(--nodeStroke)")
+        .attr("stroke-width", d => isSelected(d) ? 2.5 : 1.5);
+
+      // Labels
+      g.select("text")
+        .attr("x", r + 6)
+        .attr("y", 4)
+        .attr("fill", d => isSelected(d) ? "#e8ecff" : "#c9d2ff")
+        .attr("font-size", fontSize)
+        .text(d => d.name);
+
+      // Selection links
+      const k = keyForTriple();
+      const selNodes = [selectedByCluster.C, selectedByCluster.M, selectedByCluster.P].filter(Boolean);
+
+      const linkData = (k && selNodes.length === 3)
+        ? [
+            { a: selectedByCluster.C, b: selectedByCluster.M },
+            { a: selectedByCluster.M, b: selectedByCluster.P },
+          ]
+        : [];
+
+      const links = svg.selectAll("path.selLink").data(linkData, d => d.a.id + "->" + d.b.id).join("path")
+        .attr("class", "selLink")
+        .attr("fill", "none")
+        .attr("stroke", "rgba(45, 125, 255, 0.8)")
         .attr("stroke-width", 2);
+
+      links.attr("d", d => {
+        const x1 = d.a.x, y1 = d.a.y;
+        const x2 = d.b.x, y2 = d.b.y;
+        const mx = (x1 + x2) / 2;
+        return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+      });
     }
- })
- .on("mouseleave", function(event, d) {
-    if (!isSelected(d)) {
-      d3.select(this).select("circle")
-        .attr("fill", "var(--node)")
-        .attr("stroke", "var(--nodeStroke)")
-        .attr("stroke-width", 1.5);
+
+    /**
+     * ====== Buttons ======
+     */
+    document.getElementById("clear").addEventListener("click", () => clearSelection());
+
+    document.getElementById("export").addEventListener("click", () => {
+      const out = document.getElementById("exportOut");
+      const json = JSON.stringify(cellDB, null, 2);
+      out.innerHTML = `
+        <div class="pill ok">Exported JSON</div>
+        <textarea readonly>${json.replace(/</g, "&lt;")}</textarea>
+      `;
+    });
+
+    /**
+     * ====== Init ======
+     */
+    let resizeTimeout;
+    function handleResize() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => render(), 150);
     }
- });
 
-
-  g.select("circle")
-    .attr("r", nodeR)
-    .attr("fill", d => isSelected(d) ? "var(--sel)" : "var(--node)")
-    .attr("stroke", d => isSelected(d) ? "var(--selStroke)" : "var(--nodeStroke)")
-    .attr("stroke-width", d => isSelected(d) ? 3 : 1.5);
-
-  // labels (to the right of circles)
-  g.select("text")
-    .attr("x", nodeR + 10)
-    .attr("y", 5)
-    .attr("fill", d => isSelected(d) ? "#e8ecff" : "#c9d2ff")
-    .attr("font-size", 12)
-    .text(d => d.name);
-
-
-  // if triple complete, draw a subtle connector (optional, to emphasize "edge")
-  const k = keyForTriple();
-  const selNodes = [selectedByCluster.C, selectedByCluster.M, selectedByCluster.P].filter(Boolean);
-
-  const linkData = (k && selNodes.length===3)
-    ? [
-        { a: selectedByCluster.C, b: selectedByCluster.M },
-        { a: selectedByCluster.M, b: selectedByCluster.P },
-      ]
-    : [];
-
-  const links = svg.selectAll("path.selLink").data(linkData, d=>d.a.id+"->"+d.b.id).join("path")
-    .attr("class","selLink")
-    .attr("fill","none")
-    .attr("stroke","rgba(45, 125, 255,1)")
-    .attr("stroke-width",2.2);
-
-  links.attr("d", d => {
-    const x1=d.a.x, y1=d.a.y;
-    const x2=d.b.x, y2=d.b.y;
-    const mx=(x1+x2)/2;
-    // cubic bezier curve
-    return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
-  });
-}
-
-/**
- * ====== Buttons ======
- */
-document.getElementById("clear").addEventListener("click", () => clearSelection());
-
-
-
-document.getElementById("export").addEventListener("click", () => {
-  const out = document.getElementById("exportOut");
-  const json = JSON.stringify(cellDB, null, 2);
-  out.innerHTML = `
-    <div class="pill ok">Exported JSON below (copy it)</div>
-    <textarea readonly>${json.replace(/</g,"&lt;")}</textarea>
-  `;
-});
-
-/**
- * ====== Init ======
- */
-(async function init() {
-  await loadCellDB();
-  render();
-  updatePanel();
-  window.addEventListener("resize", () => render());
-})();
-</script>
+    (async function init() {
+      await loadCellDB();
+      render();
+      updatePanel();
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("orientationchange", () => {
+        setTimeout(() => render(), 300);
+      });
+    })();
+  </script>
 </body>
 </html>
