@@ -14,7 +14,7 @@
     .wrap{ display:flex; height:100vh; }
     #viz{ flex:1; position:relative; }
     #panel{
-      width:600px; border-left:1px solid var(--line); background:var(--panel);
+      width:30%; border-left:1px solid var(--line); background:var(--panel);
       padding:14px; box-sizing:border-box; overflow:auto;
     }
     h2{ margin:0 0 8px 0; font-size:16px; }
@@ -50,9 +50,49 @@
       margin:0 auto;
       justify-content: center;
     }
+    .rotateGate{
+  position: fixed; inset: 0;
+  display: none;
+  align-items: center; justify-content: center;
+  background: rgba(11,16,32,.92);
+  z-index: 9999;
+  padding: 18px;
+}
+.rotateCard{
+  max-width: 520px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+}
+.rotateTitle{
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+.rotateText{
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Optionnel: sur petits écrans, évite la sélection de texte accidentelle */
+@media (max-width: 820px){
+  body{ -webkit-tap-highlight-color: transparent; }
+}
+
   </style>
 </head>
 <body>
+  <div id="rotateGate" class="rotateGate" aria-hidden="true">
+  <div class="rotateCard">
+    <div class="rotateTitle">Tourne ton téléphone</div>
+    <div class="rotateText">Passe en mode paysage (landscape) pour utiliser l’app comme sur un laptop.</div>
+  </div>
+</div>
+
 <div class="wrap">
   <div id="viz">
     <div class="title">
@@ -154,20 +194,47 @@ const vGap = 100;
 /**
  * Build nodes with cluster type
  */
-function buildNodes(W, H){
+function buildNodes(W, H) {
   const xs = colX(W);
-  const top = 120;
 
-  const yPositions = (n) => Array.from({length:n}, (_,i)=> top + i*vGap);
+  // Responsive vertical layout parameters
+  const topPad = 110;     // space for title/labels
+  const bottomPad = 40;   // space at bottom
+  const minGap = 48;      // prevent nodes from getting too close
+  const maxGap = 120;     // prevent huge gaps on tall screens
 
-  const nodes = [
-    ...categories.map((name,i)=> ({ id:`C:${name}`, name, cluster:"C", x: xs.C, y: yPositions(categories.length)[i] })),
-    ...models.map((name,i)=> ({ id:`M:${name}`, name, cluster:"M", x: xs.M, y: yPositions(models.length)[i] })),
-    ...perspectives.map((name,i)=> ({ id:`P:${name}`, name, cluster:"P", x: xs.P, y: yPositions(perspectives.length)[i] })),
+  function yPositions(count) {
+    if (count <= 0) return [];
+    if (count === 1) return [Math.round((topPad + (H - bottomPad)) / 2)];
+
+    const usable = Math.max(0, (H - bottomPad) - topPad);
+    let gap = usable / (count - 1);
+    gap = Math.max(minGap, Math.min(maxGap, gap));
+
+    // If we clamped gap (min/max), re-center the block vertically
+    const block = gap * (count - 1);
+    const start = Math.round(topPad + (usable - block) / 2);
+
+    return Array.from({ length: count }, (_, i) => start + i * gap);
+  }
+
+  const yC = yPositions(categories.length);
+  const yM = yPositions(models.length);
+  const yP = yPositions(perspectives.length);
+
+  return [
+    ...categories.map((name, i) => ({
+      id: `C:${name}`, name, cluster: "C", x: xs.C, y: yC[i]
+    })),
+    ...models.map((name, i) => ({
+      id: `M:${name}`, name, cluster: "M", x: xs.M, y: yM[i]
+    })),
+    ...perspectives.map((name, i) => ({
+      id: `P:${name}`, name, cluster: "P", x: xs.P, y: yP[i]
+    })),
   ];
-
-  return nodes;
 }
+
 
 /**
  * Selection state:
