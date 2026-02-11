@@ -14,7 +14,7 @@
     .wrap{ display:flex; height:100vh; }
     #viz{ flex:1; position:relative; }
     #panel{
-      width:420px; border-left:1px solid var(--line); background:var(--panel);
+      width:600px; border-left:1px solid var(--line); background:var(--panel);
       padding:14px; box-sizing:border-box; overflow:auto;
     }
     h2{ margin:0 0 8px 0; font-size:16px; }
@@ -33,7 +33,7 @@
     }
     button:hover{ border-color:#3a4a8e; }
     textarea{
-      width:100%; height:160px; background:#0c142c; color:var(--text);
+      width:100%; height:70%; background:#0c142c; color:var(--text);
       border:1px solid var(--line); border-radius:12px; padding:10px; box-sizing:border-box;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size:12px; line-height:1.35;
@@ -42,10 +42,13 @@
     .title{
       position:absolute; left:12px; top:10px; right:12px;
       display:flex; gap:10px; align-items:center;
+      width: 100%;
     }
     .badge{
       padding:6px 10px; border:1px solid var(--line); border-radius:10px;
-      background: rgba(15,23,48,0.65); color: var(--muted); font-size: 12px;
+      background: rgba(15,23,48,0.65); color: var(--muted); font-size: 14px;
+      margin:0 auto;
+      justify-content: center;
     }
   </style>
 </head>
@@ -53,8 +56,7 @@
 <div class="wrap">
   <div id="viz">
     <div class="title">
-      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩</div>
-      <div class="badge">Rule: you can’t select 2 nodes from the same cluster</div>
+      <div class="badge">Select 1 node in each cluster to form a hyperedge ⟨Category, Perspective, Model⟩. You can’t select 2 nodes from the same cluster</div>
     </div>
     <svg id="svg"></svg>
   </div>
@@ -70,12 +72,11 @@
     <div id="triple" class="row"></div>
 
     <h2 style="margin-top:14px;">Content (editable)</h2>
-    <div class="hint">Edit text and click <b>Save</b>. (Stored in-memory; you can later export JSON.)</div>
+    <div class="hint">You can later export JSON.)</div>
     <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
 
     <div class="btnbar">
       <button id="clear">Clear selection</button>
-      <button id="save">Save</button>
       <button id="export">Export JSON</button>
     </div>
 
@@ -100,27 +101,308 @@ const categories = [
   "Compliance & Legal"
 ];
 
+const models = ["SUM", "SAM", "SPM", "SRM", "SDM"];
+
 const perspectives = ["Requirement", "Challenge", "Issue", "Solution"];
 
-const models = ["SUM", "SAM", "SPM", "SRM", "SDM"];
 
 /**
  * cellDB stores content keyed by "Category|Perspective|Model"
- * You can pre-fill some examples. Everything else defaults to empty.
  */
+
+  /* ===================== Data & Computation ===================== */
+
 const cellDB = {
-  "Data & Computation|Issue|SAM": [
-    "Application-level data issues (SAM scope):",
-    "- Unsafe handling of sensitive data inside components",
-    "- Insecure or ambiguous data flows between components",
-    "- Dependency-driven risks impacting computation correctness",
-  ].join("\n"),
-  "Access Control|Requirement|SRM": [
-    "Rule-level access requirements (SRM scope):",
-    "- Formal least-privilege constraints",
-    "- Separation-of-duties constraints",
-    "- Enforceable policy statements derived from SUM/SAM/SPM",
-  ].join("\n"),
+  "Data & Computation|Requirement|SUM": [
+  "User-level Data & Computation — Requirement:",
+  "- Users must have transparency over how their data is collected and processed.",
+  "- Personal data handling must respect consent and purpose limitation.",
+  "- Users must retain control over data sharing and revocation.",
+].join("\n"),
+
+"Data & Computation|Requirement|SAM": [
+  "Application-level Data & Computation — Requirement:",
+  "- Applications must enforce secure data processing pipelines.",
+  "- Sensitive data must be encrypted in transit and at rest.",
+  "- Data validation must prevent injection and manipulation attacks.",
+].join("\n"),
+
+"Data & Computation|Requirement|SPM": [
+  "Platform-level Data & Computation — Requirement:",
+  "- The platform must isolate workloads across tenants.",
+  "- Computational resources must prevent side-channel leakage.",
+  "- Secure APIs must mediate data exchange between services.",
+].join("\n"),
+
+"Data & Computation|Requirement|SRM": [
+  "Rules-level Data & Computation — Requirement:",
+  "- Data access policies must enforce least-privilege constraints.",
+  "- Processing rules must align with regulatory compliance policies.",
+  "- Formal constraints must govern cross-boundary data flows.",
+].join("\n"),
+
+"Data & Computation|Requirement|SDM": [
+  "Detection-level Data & Computation — Requirement:",
+  "- Monitoring mechanisms must detect anomalous data access.",
+  "- Integrity checks must detect unauthorized computation changes.",
+  "- Logging mechanisms must support forensic investigation.",
+].join("\n"),
+
+/* ===== Data & Computation — Challenge ===== */
+"Data & Computation|Challenge|SUM": [
+  "User-level Data & Computation — Challenge:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Challenge|SAM": [
+  "Application-level Data & Computation — Challenge:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Challenge|SPM": [
+  "Platform-level Data & Computation — Challenge:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Challenge|SRM": [
+  "Rules-level Data & Computation — Challenge:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Challenge|SDM": [
+  "Detection-level Data & Computation — Challenge:",
+  "To be filled",
+].join("\n"),
+
+/* ===== Data & Computation — Issue ===== */
+"Data & Computation|Issue|SUM": [
+  "User-level Data & Computation — Issue:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Issue|SAM": [
+  "Application-level Data & Computation — Issue:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Issue|SPM": [
+  "Platform-level Data & Computation — Issue:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Issue|SRM": [
+  "Rules-level Data & Computation — Issue:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Issue|SDM": [
+  "Detection-level Data & Computation — Issue:",
+  "To be filled",
+].join("\n"),
+
+/* ===== Data & Computation — Solution ===== */
+"Data & Computation|Solution|SUM": [
+  "User-level Data & Computation — Solution:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Solution|SAM": [
+  "Application-level Data & Computation — Solution:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Solution|SPM": [
+  "Platform-level Data & Computation — Solution:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Solution|SRM": [
+  "Rules-level Data & Computation — Solution:",
+  "To be filled",
+].join("\n"),
+
+"Data & Computation|Solution|SDM": [
+  "Detection-level Data & Computation — Solution:",
+  "To be filled",
+].join("\n"),
+
+
+/* ===================== Virtualization ===================== */
+  "Virtualization|Requirement|SUM": ["User-level Virtualization — Requirement", "To be filled"].join("\n"),
+  "Virtualization|Requirement|SAM": ["Application-level Virtualization — Requirement", "To be filled"].join("\n"),
+  "Virtualization|Requirement|SPM": ["Platform-level Virtualization — Requirement", "To be filled"].join("\n"),
+  "Virtualization|Requirement|SRM": ["Rules-level Virtualization — Requirement", "To be filled"].join("\n"),
+  "Virtualization|Requirement|SDM": ["Detection-level Virtualization — Requirement", "To be filled"].join("\n"),
+
+  "Virtualization|Challenge|SUM": ["User-level Virtualization — Challenge", "To be filled"].join("\n"),
+  "Virtualization|Challenge|SAM": ["Application-level Virtualization — Challenge", "To be filled"].join("\n"),
+  "Virtualization|Challenge|SPM": ["Platform-level Virtualization — Challenge", "To be filled"].join("\n"),
+  "Virtualization|Challenge|SRM": ["Rules-level Virtualization — Challenge", "To be filled"].join("\n"),
+  "Virtualization|Challenge|SDM": ["Detection-level Virtualization — Challenge", "To be filled"].join("\n"),
+
+  "Virtualization|Issue|SUM": ["User-level Virtualization — Issue", "To be filled"].join("\n"),
+  "Virtualization|Issue|SAM": ["Application-level Virtualization — Issue", "To be filled"].join("\n"),
+  "Virtualization|Issue|SPM": ["Platform-level Virtualization — Issue", "To be filled"].join("\n"),
+  "Virtualization|Issue|SRM": ["Rules-level Virtualization — Issue", "To be filled"].join("\n"),
+  "Virtualization|Issue|SDM": ["Detection-level Virtualization — Issue", "To be filled"].join("\n"),
+
+  "Virtualization|Solution|SUM": ["User-level Virtualization — Solution", "To be filled"].join("\n"),
+  "Virtualization|Solution|SAM": ["Application-level Virtualization — Solution", "To be filled"].join("\n"),
+  "Virtualization|Solution|SPM": ["Platform-level Virtualization — Solution", "To be filled"].join("\n"),
+  "Virtualization|Solution|SRM": ["Rules-level Virtualization — Solution", "To be filled"].join("\n"),
+  "Virtualization|Solution|SDM": ["Detection-level Virtualization — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Internet & Services ===================== */
+  "Internet & Services|Requirement|SUM": ["User-level Internet & Services — Requirement", "To be filled"].join("\n"),
+  "Internet & Services|Requirement|SAM": ["Application-level Internet & Services — Requirement", "To be filled"].join("\n"),
+  "Internet & Services|Requirement|SPM": ["Platform-level Internet & Services — Requirement", "To be filled"].join("\n"),
+  "Internet & Services|Requirement|SRM": ["Rules-level Internet & Services — Requirement", "To be filled"].join("\n"),
+  "Internet & Services|Requirement|SDM": ["Detection-level Internet & Services — Requirement", "To be filled"].join("\n"),
+
+  "Internet & Services|Challenge|SUM": ["User-level Internet & Services — Challenge", "To be filled"].join("\n"),
+  "Internet & Services|Challenge|SAM": ["Application-level Internet & Services — Challenge", "To be filled"].join("\n"),
+  "Internet & Services|Challenge|SPM": ["Platform-level Internet & Services — Challenge", "To be filled"].join("\n"),
+  "Internet & Services|Challenge|SRM": ["Rules-level Internet & Services — Challenge", "To be filled"].join("\n"),
+  "Internet & Services|Challenge|SDM": ["Detection-level Internet & Services — Challenge", "To be filled"].join("\n"),
+
+  "Internet & Services|Issue|SUM": ["User-level Internet & Services — Issue", "To be filled"].join("\n"),
+  "Internet & Services|Issue|SAM": ["Application-level Internet & Services — Issue", "To be filled"].join("\n"),
+  "Internet & Services|Issue|SPM": ["Platform-level Internet & Services — Issue", "To be filled"].join("\n"),
+  "Internet & Services|Issue|SRM": ["Rules-level Internet & Services — Issue", "To be filled"].join("\n"),
+  "Internet & Services|Issue|SDM": ["Detection-level Internet & Services — Issue", "To be filled"].join("\n"),
+
+  "Internet & Services|Solution|SUM": ["User-level Internet & Services — Solution", "To be filled"].join("\n"),
+  "Internet & Services|Solution|SAM": ["Application-level Internet & Services — Solution", "To be filled"].join("\n"),
+  "Internet & Services|Solution|SPM": ["Platform-level Internet & Services — Solution", "To be filled"].join("\n"),
+  "Internet & Services|Solution|SRM": ["Rules-level Internet & Services — Solution", "To be filled"].join("\n"),
+  "Internet & Services|Solution|SDM": ["Detection-level Internet & Services — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Network ===================== */
+  "Network|Requirement|SUM": ["User-level Network — Requirement", "To be filled"].join("\n"),
+  "Network|Requirement|SAM": ["Application-level Network — Requirement", "To be filled"].join("\n"),
+  "Network|Requirement|SPM": ["Platform-level Network — Requirement", "To be filled"].join("\n"),
+  "Network|Requirement|SRM": ["Rules-level Network — Requirement", "To be filled"].join("\n"),
+  "Network|Requirement|SDM": ["Detection-level Network — Requirement", "To be filled"].join("\n"),
+
+  "Network|Challenge|SUM": ["User-level Network — Challenge", "To be filled"].join("\n"),
+  "Network|Challenge|SAM": ["Application-level Network — Challenge", "To be filled"].join("\n"),
+  "Network|Challenge|SPM": ["Platform-level Network — Challenge", "To be filled"].join("\n"),
+  "Network|Challenge|SRM": ["Rules-level Network — Challenge", "To be filled"].join("\n"),
+  "Network|Challenge|SDM": ["Detection-level Network — Challenge", "To be filled"].join("\n"),
+
+  "Network|Issue|SUM": ["User-level Network — Issue", "To be filled"].join("\n"),
+  "Network|Issue|SAM": ["Application-level Network — Issue", "To be filled"].join("\n"),
+  "Network|Issue|SPM": ["Platform-level Network — Issue", "To be filled"].join("\n"),
+  "Network|Issue|SRM": ["Rules-level Network — Issue", "To be filled"].join("\n"),
+  "Network|Issue|SDM": ["Detection-level Network — Issue", "To be filled"].join("\n"),
+
+  "Network|Solution|SUM": ["User-level Network — Solution", "To be filled"].join("\n"),
+  "Network|Solution|SAM": ["Application-level Network — Solution", "To be filled"].join("\n"),
+  "Network|Solution|SPM": ["Platform-level Network — Solution", "To be filled"].join("\n"),
+  "Network|Solution|SRM": ["Rules-level Network — Solution", "To be filled"].join("\n"),
+  "Network|Solution|SDM": ["Detection-level Network — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Access Control ===================== */
+  "Access Control|Requirement|SUM": ["User-level Access Control — Requirement", "To be filled"].join("\n"),
+  "Access Control|Requirement|SAM": ["Application-level Access Control — Requirement", "To be filled"].join("\n"),
+  "Access Control|Requirement|SPM": ["Platform-level Access Control — Requirement", "To be filled"].join("\n"),
+  "Access Control|Requirement|SRM": ["Rules-level Access Control — Requirement", "To be filled"].join("\n"),
+  "Access Control|Requirement|SDM": ["Detection-level Access Control — Requirement", "To be filled"].join("\n"),
+
+  "Access Control|Challenge|SUM": ["User-level Access Control — Challenge", "To be filled"].join("\n"),
+  "Access Control|Challenge|SAM": ["Application-level Access Control — Challenge", "To be filled"].join("\n"),
+  "Access Control|Challenge|SPM": ["Platform-level Access Control — Challenge", "To be filled"].join("\n"),
+  "Access Control|Challenge|SRM": ["Rules-level Access Control — Challenge", "To be filled"].join("\n"),
+  "Access Control|Challenge|SDM": ["Detection-level Access Control — Challenge", "To be filled"].join("\n"),
+
+  "Access Control|Issue|SUM": ["User-level Access Control — Issue", "To be filled"].join("\n"),
+  "Access Control|Issue|SAM": ["Application-level Access Control — Issue", "To be filled"].join("\n"),
+  "Access Control|Issue|SPM": ["Platform-level Access Control — Issue", "To be filled"].join("\n"),
+  "Access Control|Issue|SRM": ["Rules-level Access Control — Issue", "To be filled"].join("\n"),
+  "Access Control|Issue|SDM": ["Detection-level Access Control — Issue", "To be filled"].join("\n"),
+
+  "Access Control|Solution|SUM": ["User-level Access Control — Solution", "To be filled"].join("\n"),
+  "Access Control|Solution|SAM": ["Application-level Access Control — Solution", "To be filled"].join("\n"),
+  "Access Control|Solution|SPM": ["Platform-level Access Control — Solution", "To be filled"].join("\n"),
+  "Access Control|Solution|SRM": ["Rules-level Access Control — Solution", "To be filled"].join("\n"),
+  "Access Control|Solution|SDM": ["Detection-level Access Control — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Software ===================== */
+  "Software|Requirement|SUM": ["User-level Software — Requirement", "To be filled"].join("\n"),
+  "Software|Requirement|SAM": ["Application-level Software — Requirement", "To be filled"].join("\n"),
+  "Software|Requirement|SPM": ["Platform-level Software — Requirement", "To be filled"].join("\n"),
+  "Software|Requirement|SRM": ["Rules-level Software — Requirement", "To be filled"].join("\n"),
+  "Software|Requirement|SDM": ["Detection-level Software — Requirement", "To be filled"].join("\n"),
+
+  "Software|Challenge|SUM": ["User-level Software — Challenge", "To be filled"].join("\n"),
+  "Software|Challenge|SAM": ["Application-level Software — Challenge", "To be filled"].join("\n"),
+  "Software|Challenge|SPM": ["Platform-level Software — Challenge", "To be filled"].join("\n"),
+  "Software|Challenge|SRM": ["Rules-level Software — Challenge", "To be filled"].join("\n"),
+  "Software|Challenge|SDM": ["Detection-level Software — Challenge", "To be filled"].join("\n"),
+
+  "Software|Issue|SUM": ["User-level Software — Issue", "To be filled"].join("\n"),
+  "Software|Issue|SAM": ["Application-level Software — Issue", "To be filled"].join("\n"),
+  "Software|Issue|SPM": ["Platform-level Software — Issue", "To be filled"].join("\n"),
+  "Software|Issue|SRM": ["Rules-level Software — Issue", "To be filled"].join("\n"),
+  "Software|Issue|SDM": ["Detection-level Software — Issue", "To be filled"].join("\n"),
+
+  "Software|Solution|SUM": ["User-level Software — Solution", "To be filled"].join("\n"),
+  "Software|Solution|SAM": ["Application-level Software — Solution", "To be filled"].join("\n"),
+  "Software|Solution|SPM": ["Platform-level Software — Solution", "To be filled"].join("\n"),
+  "Software|Solution|SRM": ["Rules-level Software — Solution", "To be filled"].join("\n"),
+  "Software|Solution|SDM": ["Detection-level Software — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Trust Management ===================== */
+  "Trust Management|Requirement|SUM": ["User-level Trust Management — Requirement", "To be filled"].join("\n"),
+  "Trust Management|Requirement|SAM": ["Application-level Trust Management — Requirement", "To be filled"].join("\n"),
+  "Trust Management|Requirement|SPM": ["Platform-level Trust Management — Requirement", "To be filled"].join("\n"),
+  "Trust Management|Requirement|SRM": ["Rules-level Trust Management — Requirement", "To be filled"].join("\n"),
+  "Trust Management|Requirement|SDM": ["Detection-level Trust Management — Requirement", "To be filled"].join("\n"),
+
+  "Trust Management|Challenge|SUM": ["User-level Trust Management — Challenge", "To be filled"].join("\n"),
+  "Trust Management|Challenge|SAM": ["Application-level Trust Management — Challenge", "To be filled"].join("\n"),
+  "Trust Management|Challenge|SPM": ["Platform-level Trust Management — Challenge", "To be filled"].join("\n"),
+  "Trust Management|Challenge|SRM": ["Rules-level Trust Management — Challenge", "To be filled"].join("\n"),
+  "Trust Management|Challenge|SDM": ["Detection-level Trust Management — Challenge", "To be filled"].join("\n"),
+
+  "Trust Management|Issue|SUM": ["User-level Trust Management — Issue", "To be filled"].join("\n"),
+  "Trust Management|Issue|SAM": ["Application-level Trust Management — Issue", "To be filled"].join("\n"),
+  "Trust Management|Issue|SPM": ["Platform-level Trust Management — Issue", "To be filled"].join("\n"),
+  "Trust Management|Issue|SRM": ["Rules-level Trust Management — Issue", "To be filled"].join("\n"),
+  "Trust Management|Issue|SDM": ["Detection-level Trust Management — Issue", "To be filled"].join("\n"),
+
+  "Trust Management|Solution|SUM": ["User-level Trust Management — Solution", "To be filled"].join("\n"),
+  "Trust Management|Solution|SAM": ["Application-level Trust Management — Solution", "To be filled"].join("\n"),
+  "Trust Management|Solution|SPM": ["Platform-level Trust Management — Solution", "To be filled"].join("\n"),
+  "Trust Management|Solution|SRM": ["Rules-level Trust Management — Solution", "To be filled"].join("\n"),
+  "Trust Management|Solution|SDM": ["Detection-level Trust Management — Solution", "To be filled"].join("\n"),
+
+  /* ===================== Compliance & Legal ===================== */
+  "Compliance & Legal|Requirement|SUM": ["User-level Compliance & Legal — Requirement", "To be filled"].join("\n"),
+  "Compliance & Legal|Requirement|SAM": ["Application-level Compliance & Legal — Requirement", "To be filled"].join("\n"),
+  "Compliance & Legal|Requirement|SPM": ["Platform-level Compliance & Legal — Requirement", "To be filled"].join("\n"),
+  "Compliance & Legal|Requirement|SRM": ["Rules-level Compliance & Legal — Requirement", "To be filled"].join("\n"),
+  "Compliance & Legal|Requirement|SDM": ["Detection-level Compliance & Legal — Requirement", "To be filled"].join("\n"),
+
+  "Compliance & Legal|Challenge|SUM": ["User-level Compliance & Legal — Challenge", "To be filled"].join("\n"),
+  "Compliance & Legal|Challenge|SAM": ["Application-level Compliance & Legal — Challenge", "To be filled"].join("\n"),
+  "Compliance & Legal|Challenge|SPM": ["Platform-level Compliance & Legal — Challenge", "To be filled"].join("\n"),
+  "Compliance & Legal|Challenge|SRM": ["Rules-level Compliance & Legal — Challenge", "To be filled"].join("\n"),
+  "Compliance & Legal|Challenge|SDM": ["Detection-level Compliance & Legal — Challenge", "To be filled"].join("\n"),
+
+  "Compliance & Legal|Issue|SUM": ["User-level Compliance & Legal — Issue", "To be filled"].join("\n"),
+  "Compliance & Legal|Issue|SAM": ["Application-level Compliance & Legal — Issue", "To be filled"].join("\n"),
+  "Compliance & Legal|Issue|SPM": ["Platform-level Compliance & Legal — Issue", "To be filled"].join("\n"),
+  "Compliance & Legal|Issue|SRM": ["Rules-level Compliance & Legal — Issue", "To be filled"].join("\n"),
+  "Compliance & Legal|Issue|SDM": ["Detection-level Compliance & Legal — Issue", "To be filled"].join("\n"),
+
+  "Compliance & Legal|Solution|SUM": ["User-level Compliance & Legal — Solution", "To be filled"].join("\n"),
+  "Compliance & Legal|Solution|SAM": ["Application-level Compliance & Legal — Solution", "To be filled"].join("\n"),
+  "Compliance & Legal|Solution|SPM": ["Platform-level Compliance & Legal — Solution", "To be filled"].join("\n"),
+  "Compliance & Legal|Solution|SRM": ["Rules-level Compliance & Legal — Solution", "To be filled"].join("\n"),
+  "Compliance & Legal|Solution|SDM": ["Detection-level Compliance & Legal — Solution", "To be filled"].join("\n"),
+
+  
 };
 
 /**
@@ -133,26 +415,26 @@ const height = () => viz.clientHeight;
 
 const colX = (W) => ({
   C: Math.round(W * 0.18),
-  P: Math.round(W * 0.50),
-  M: Math.round(W * 0.82),
+  M: Math.round(W * 0.50),
+  P: Math.round(W * 0.820),
 });
 
 const nodeR = 18;
-const vGap = 64;
+const vGap = 100;
 
 /**
  * Build nodes with cluster type
  */
 function buildNodes(W, H){
   const xs = colX(W);
-  const top = 100;
+  const top = 120;
 
   const yPositions = (n) => Array.from({length:n}, (_,i)=> top + i*vGap);
 
   const nodes = [
     ...categories.map((name,i)=> ({ id:`C:${name}`, name, cluster:"C", x: xs.C, y: yPositions(categories.length)[i] })),
-    ...perspectives.map((name,i)=> ({ id:`P:${name}`, name, cluster:"P", x: xs.P, y: yPositions(perspectives.length)[i] })),
     ...models.map((name,i)=> ({ id:`M:${name}`, name, cluster:"M", x: xs.M, y: yPositions(models.length)[i] })),
+    ...perspectives.map((name,i)=> ({ id:`P:${name}`, name, cluster:"P", x: xs.P, y: yPositions(perspectives.length)[i] })),
   ];
 
   return nodes;
@@ -162,12 +444,13 @@ function buildNodes(W, H){
  * Selection state:
  * selectedByCluster = { C: node or null, P: node or null, M: node or null }
  */
-let selectedByCluster = { C:null, P:null, M:null };
+let selectedByCluster = { C:null, M:null, P:null };
 
 function keyForTriple(){
   const c = selectedByCluster.C?.name;
-  const p = selectedByCluster.P?.name;
   const m = selectedByCluster.M?.name;
+  const p = selectedByCluster.P?.name;
+
   if(!c || !p || !m) return null;
   return `${c}|${p}|${m}`;
 }
@@ -188,14 +471,15 @@ function updatePanel(){
   };
 
   status.appendChild(mkPill("Category", selectedByCluster.C?.name, !!selectedByCluster.C));
-  status.appendChild(mkPill("Perspective", selectedByCluster.P?.name, !!selectedByCluster.P));
   status.appendChild(mkPill("Model", selectedByCluster.M?.name, !!selectedByCluster.M));
+  status.appendChild(mkPill("Perspective", selectedByCluster.P?.name, !!selectedByCluster.P));
+
 
   const k = keyForTriple();
   if(k){
     const span = document.createElement("span");
     span.className = "pill ok";
-    span.textContent = `Triple key: ⟨${selectedByCluster.C.name}, ${selectedByCluster.P.name}, ${selectedByCluster.M.name}⟩`;
+    span.textContent = `Triple key: ⟨${selectedByCluster.C.name}, ${selectedByCluster.M.name},  ${selectedByCluster.P.name}⟩`;
     triple.appendChild(span);
 
     content.value = cellDB[k] ?? "";
@@ -212,7 +496,7 @@ function updatePanel(){
 }
 
 function clearSelection(){
-  selectedByCluster = { C:null, P:null, M:null };
+  selectedByCluster = { C:null, M:null, P:null };
   render(); // re-render to update styles
   updatePanel();
 }
@@ -252,8 +536,9 @@ function render(){
   // cluster labels
   const labels = [
     {x: colX(W).C, y: 60, t:"Categories"},
-    {x: colX(W).P, y: 60, t:"Perspectives"},
     {x: colX(W).M, y: 60, t:"Models"},
+    {x: colX(W).P, y: 60, t:"Perspectives"},
+
   ];
 
   svg.selectAll("text.clusterLabel").data(labels).join("text")
@@ -268,6 +553,14 @@ function render(){
   // helper: is selected?
   const isSelected = (n) => selectedByCluster[n.cluster]?.id === n.id;
 
+    // faint guide lines between columns (just structure, not edges)
+  const xs = colX(W);
+  svg.selectAll("line.guides").data([xs.C, xs.M, xs.P]).join("line")
+    .attr("class","guides")
+    .attr("x1",d=>d).attr("x2",d=>d)
+    .attr("y1",80).attr("y2",H-30)
+    .attr("stroke","#6b6b6b").attr("stroke-width",2);
+
   // node groups
   const g = svg.selectAll("g.node").data(nodes, d=>d.id).join(
     enter => {
@@ -279,7 +572,24 @@ function render(){
   );
 
   g.attr("transform", d => `translate(${d.x},${d.y})`)
-   .on("click", (event, d) => toggleNode(d));
+ .on("click", (event, d) => toggleNode(d))
+ .on("mouseenter", function(event, d) {
+    if (!isSelected(d)) {
+      d3.select(this).select("circle")
+        .attr("fill", "rgba(157,190,255,1)")   // hover color
+        .attr("stroke", "var(--selStroke)")
+        .attr("stroke-width", 2);
+    }
+ })
+ .on("mouseleave", function(event, d) {
+    if (!isSelected(d)) {
+      d3.select(this).select("circle")
+        .attr("fill", "var(--node)")
+        .attr("stroke", "var(--nodeStroke)")
+        .attr("stroke-width", 1.5);
+    }
+ });
+
 
   g.select("circle")
     .attr("r", nodeR)
@@ -295,29 +605,22 @@ function render(){
     .attr("font-size", 12)
     .text(d => d.name);
 
-  // faint guide lines between columns (just structure, not edges)
-  const xs = colX(W);
-  svg.selectAll("line.guides").data([xs.C, xs.P, xs.M]).join("line")
-    .attr("class","guides")
-    .attr("x1",d=>d).attr("x2",d=>d)
-    .attr("y1",80).attr("y2",H-30)
-    .attr("stroke","#14204a").attr("stroke-width",1);
 
   // if triple complete, draw a subtle connector (optional, to emphasize "edge")
   const k = keyForTriple();
-  const selNodes = [selectedByCluster.C, selectedByCluster.P, selectedByCluster.M].filter(Boolean);
+  const selNodes = [selectedByCluster.C, selectedByCluster.M, selectedByCluster.P].filter(Boolean);
 
   const linkData = (k && selNodes.length===3)
     ? [
-        { a:selectedByCluster.C, b:selectedByCluster.P },
-        { a:selectedByCluster.P, b:selectedByCluster.M },
+        { a: selectedByCluster.C, b: selectedByCluster.M },
+        { a: selectedByCluster.M, b: selectedByCluster.P },
       ]
     : [];
 
   const links = svg.selectAll("path.selLink").data(linkData, d=>d.a.id+"->"+d.b.id).join("path")
     .attr("class","selLink")
     .attr("fill","none")
-    .attr("stroke","rgba(157,190,255,0.55)")
+    .attr("stroke","rgba(45, 125, 255,1)")
     .attr("stroke-width",2.2);
 
   links.attr("d", d => {
@@ -334,16 +637,7 @@ function render(){
  */
 document.getElementById("clear").addEventListener("click", () => clearSelection());
 
-document.getElementById("save").addEventListener("click", () => {
-  const k = keyForTriple();
-  if(!k) return;
-  const txt = document.getElementById("content").value ?? "";
-  cellDB[k] = txt;
-  // small feedback
-  const out = document.getElementById("exportOut");
-  out.innerHTML = `<div class="pill ok">Saved for key: ${k}</div>`;
-  setTimeout(()=> out.innerHTML="", 1500);
-});
+
 
 document.getElementById("export").addEventListener("click", () => {
   const out = document.getElementById("exportOut");
