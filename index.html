@@ -368,6 +368,7 @@
       <div id="contentView"></div>
       <div style="position: relative;">
   <textarea id="content" placeholder="Select a full triple (C+P+M) to view/edit its content..."></textarea>
+  <div id="refsView"></div>
   <button id="copyBtn" class="copy-btn" title="Copy content" style="display: none;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -413,9 +414,10 @@
 }
 
 function normalizeCell(v) {
-  // new object
   if (v && typeof v === "object" && !Array.isArray(v)) {
     const sections = Array.isArray(v.sections) ? v.sections : [];
+    const refs = Array.isArray(v.refs) ? v.refs : [];
+
     return {
       title: v.title ?? "",
       sections: sections.map(s => ({
@@ -423,24 +425,21 @@ function normalizeCell(v) {
         points: Array.isArray(s.points) ? s.points : []
       })),
       tags: Array.isArray(v.tags) ? v.tags : [],
-      refs: Array.isArray(v.refs) ? v.refs : []
+      refs: refs.map(r => ({
+        title: r.title ?? "",
+        link: r.link ?? ""
+      }))
     };
   }
 
-  // old array (backward compatibility)
+  // old array fallback
   if (Array.isArray(v)) {
-    return {
-      title: v[0] ?? "",
-      sections: [
-        { headline: v.slice(1).join("\n"), points: [] }
-      ],
-      tags: [],
-      refs: []
-    };
+    return { title: v[0] ?? "", sections: [{ headline: v.slice(1).join("\n"), points: [] }], tags: [], refs: [] };
   }
 
   return { title: "", sections: [], tags: [], refs: [] };
 }
+
 
 
 function cellToText(cell) {
@@ -599,13 +598,16 @@ const hasData =
 
 if (hasData) {
   document.getElementById("contentView").innerHTML =
-    `<math><mi>f</mi><mi>(</mi><mi>c,</mi><mi>m,</mi><mi>p</mi><mi>)</mi></math> = <strong>${escapeHtml(cell.title || "Untitled")}</strong>`;
+    `<math><mi>f</mi><mi>(</mi><mi>c,</mi><mi>m,</mi><mi>p</mi><mi>)</mi></math> = <span class="cell-title">${escapeHtml(cell.title || "Untitled")}</span>`;
   content.value = cellToText(cell);
+  renderRefs(cell.refs);
   content.disabled = false;
   copyBtn.style.display = "flex";
 } else {
   document.getElementById("contentView").innerHTML =
     `<math><mi>f</mi><mi>(</mi><mi>c,</mi><mi>m,</mi><mi>p</mi><mi>)</mi></math> = <em>No data</em>`;
+    document.getElementById("refsView").innerHTML = "";
+
   content.value = "";
   content.disabled = false;
   copyBtn.style.display = "none";
@@ -652,6 +654,46 @@ if (hasData) {
     /**
      * ====== Render ======
      */
+
+     function renderRefs(refs) {
+  const refsView = document.getElementById("refsView");
+  refsView.innerHTML = "";
+
+  if (!refs || !refs.length) return;
+
+  const title = document.createElement("div");
+  title.className = "pill ok";
+  title.textContent = "References";
+  refsView.appendChild(title);
+
+  const ul = document.createElement("ul");
+  ul.style.margin = "10px 0 0 18px";
+  ul.style.padding = "0";
+
+  refs.forEach(r => {
+    if (!r || !r.link) return;
+
+    const li = document.createElement("li");
+    li.style.margin = "6px 0";
+
+    const a = document.createElement("a");
+    a.href = r.link;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = r.title || r.link;
+    a.style.color = "#9dbaff";
+    a.style.textDecoration = "underline";
+    a.style.fontSize="0.8rem";
+    a.style.fontStyle="italic"
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  refsView.appendChild(ul);
+}
+
+
     function render() {
       const W = width(), H = height();
       svg.attr("viewBox", `0 0 ${W} ${H}`);
