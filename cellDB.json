@@ -1,390 +1,1938 @@
 {
-  "Data & Computation|Requirement|SUM": [
-    "User-level Data & Computation Requirement:",
-    "- Users must have transparency over how their data is collected and processed.",
-    "- Personal data handling must respect consent and purpose limitation.",
-    "- Users must retain control over data sharing and revocation."
-  ],
-  "Data & Computation|Requirement|SAM": [
-    "Application-level Data & Computation Requirement:",
-    "- Applications must enforce secure data processing pipelines.",
-    "- Sensitive data must be encrypted in transit and at rest.",
-    "- Data validation must prevent injection and manipulation attacks."
-  ],
-  "Data & Computation|Requirement|SPM": [
-    "Platform-level Data & Computation Requirement:",
-    "- The platform must isolate workloads across tenants.",
-    "- Computational resources must prevent side-channel leakage.",
-    "- Secure APIs must mediate data exchange between services."
-  ],
-  "Data & Computation|Requirement|SRM": [
-    "Rules-level Data & Computation Requirement:",
-    "- Data access policies must enforce least-privilege constraints.",
-    "- Processing rules must align with regulatory compliance policies.",
-    "- Formal constraints must govern cross-boundary data flows."
-  ],
-  "Data & Computation|Requirement|SDM": [
-    "Detection-level Data & Computation Requirement:",
-    "- Monitoring mechanisms must detect anomalous data access.",
-    "- Integrity checks must detect unauthorized computation changes.",
-    "- Logging mechanisms must support forensic investigation."
-  ],
-
-  "Data & Computation|Challenge|SUM": [
-    "User-level Data & Computation Challenge:",
-    "To be filled"
-  ],
-  "Data & Computation|Challenge|SAM": [
-    "Application-level Data & Computation Challenge:",
-    "To be filled"
-  ],
-  "Data & Computation|Challenge|SPM": [
-    "Platform-level Data & Computation Challenge:",
-    "- Ensuring trustworthiness and correctness of computation nodes in distributed systems is difficult.",
-    "- for example : In a cloud-based distributed analytics system, compute nodes may be dynamically provisioned from shared infrastructure. The client cannot verify whether each node executed the assigned computation correctly."
-  ],
-  "Data & Computation|Challenge|SRM": [
-    "Rules-level Data & Computation Challenge:",
-    "To be filled"
-  ],
-  "Data & Computation|Challenge|SDM": [
-    "Detection-level Data & Computation Challenge:",
-    "To be filled"
-  ],
-
-  "Data & Computation|Issue|SUM": [
-    "User-level Data & Computation Issue:",
-    "Data integrity and conﬁdentiality",
-    ""
-  ],
-  "Data & Computation|Issue|SAM": [
-    "Application-level Data & Computation Issue:",
-    "To be filled"
-  ],
-  "Data & Computation|Issue|SPM": [
-    "Platform-level Data & Computation Issue:",
-    "Integrity of distributed computation is not guaranteed because execution occurs in an untrusted environment.",
-    "- Malicious Node Result Manipulation",
-    "- Compromised Execution Environment (Atatck Scenario Example : An attacker gains root access to a cloud VM participating in distributed processing and modifies intermediate dataset values before they are returned to the coordinator)",
-    "- Data Shuffle Interception Without Integrity Protection (Example : In a misconfigured cluster with data integrity verification, an attacker intercepts traffic and injects altered computation data)",
-    "- Byzantine Worker Behavior (Example : In distributed machine learning, a node sends crafted gradient updates that subtly bias the model outcome toward adversarial objectives.)"
+  "Data & Computation|Requirement|SUM": {
+    "title": "User-level Data & Computation Requirement",
+    "sections": [
+      {
+        "headline": "User-level requirements focusing on transparency and user control over personal data processing.",
+        "points": [
+          {
+            "label": "Transparency of collection and processing",
+            "text": "Users must have visibility into how their data is collected and processed.",
+            "example": ""
+          },
+          {
+            "label": "Consent and purpose limitation",
+            "text": "Personal data handling must respect consent and purpose limitation.",
+            "example": ""
+          },
+          {
+            "label": "Control and revocation",
+            "text": "Users must retain control over data sharing and be able to revoke access/sharing.",
+            "example": ""
+          }
+        ]
+      }
     ],
-  "Data & Computation|Issue|SRM": [
-    "Rules-level Data & Computation Issue:",
-    "To be filled"
-  ],
-  "Data & Computation|Issue|SDM": [
-    "Detection-level Data & Computation Issue:",
-    "To be filled"
-  ],
-
-  "Data & Computation|Solution|SUM": [
-    "User-level Data & Computation Solution:",
-    "To be filled"
-  ],
-  "Data & Computation|Solution|SAM": [
-    "Application-level Data & Computation Solution:",
-    "To be filled"
-  ],
-  "Data & Computation|Solution|SPM": [
-    "Platform-level Data & Computation Solution:",
-    "- Efficient and Secure Protocol for Ensuring Data Storage Security (Syam Kumar P, Subramanian R - 2011) : (Based on Elliptic Curve Cryptography and Sobol Sequence, periodically verify the data integrity stored at CSP without retrieving original data and generate probabilistic proofs of integrity)",
-    "- "
-  ],
-  "Data & Computation|Solution|SRM": [
-    "Rules-level Data & Computation Solution:",
-    "To be filled"
-  ],
-  "Data & Computation|Solution|SDM": [
-    "Detection-level Data & Computation Solution:",
-    "To be filled"
-  ],
-
-  "Virtualization|Requirement|SUM": [
-    "User-level Virtualization Requirement",
-    "To be filled"
-  ],
-  "Virtualization|Requirement|SAM": [
-    "Application-level Virtualization Requirement",
-    "To be filled"
-  ],
-  "Virtualization|Requirement|SPM": [
-    "Platform-level Virtualization Requirement",
-    "To be filled"
-  ],
-  "Virtualization|Requirement|SRM": [
-    "Rules-level Virtualization Requirement",
-    "To be filled"
-  ],
-  "Virtualization|Requirement|SDM": [
-    "Detection-level Virtualization Requirement",
-    "To be filled"
-  ],
-
-  "Virtualization|Challenge|SUM": [
-    "User-level Virtualization Challenge",
-    "To be filled"
-  ],
-  "Virtualization|Challenge|SAM": [
-    "Application-level Virtualization Challenge",
-    "To be filled"
-  ],
-  "Virtualization|Challenge|SPM": [
-    "Platform-level Virtualization Challenge",
-    "To be filled"
-  ],
-  "Virtualization|Challenge|SRM": [
-    "Rules-level Virtualization Challenge",
-    "To be filled"
-  ],
-  "Virtualization|Challenge|SDM": [
-    "Detection-level Virtualization Challenge",
-    "To be filled"
-  ],
-
-  "Virtualization|Issue|SUM": [
-    "User-level Virtualization Issue",
-    "To be filled"
-  ],
-  "Virtualization|Issue|SAM": [
-    "Application-level Virtualization Issue",
-    "To be filled"
-  ],
-  "Virtualization|Issue|SPM": [
-    "Platform-level Virtualization Issue",
-    "To be filled"
-  ],
-  "Virtualization|Issue|SRM": [
-    "Rules-level Virtualization Issue",
-    "To be filled"
-  ],
-  "Virtualization|Issue|SDM": [
-    "Detection-level Virtualization Issue",
-    "To be filled"
-  ],
-
-  "Virtualization|Solution|SUM": [
-    "User-level Virtualization Solution",
-    "To be filled"
-  ],
-  "Virtualization|Solution|SAM": [
-    "Application-level Virtualization Solution",
-    "To be filled"
-  ],
-  "Virtualization|Solution|SPM": [
-    "Platform-level Virtualization Solution",
-    "To be filled"
-  ],
-  "Virtualization|Solution|SRM": [
-    "Rules-level Virtualization Solution",
-    "To be filled"
-  ],
-  "Virtualization|Solution|SDM": [
-    "Detection-level Virtualization Solution",
-    "To be filled"
-  ],
-
-  "Internet & Services|Requirement|SUM": [
-    "User-level Internet & Services Requirement",
-    "To be filled"
-  ],
-  "Internet & Services|Requirement|SAM": [
-    "Application-level Internet & Services Requirement",
-    "To be filled"
-  ],
-  "Internet & Services|Requirement|SPM": [
-    "Platform-level Internet & Services Requirement",
-    "To be filled"
-  ],
-  "Internet & Services|Requirement|SRM": [
-    "Rules-level Internet & Services Requirement",
-    "To be filled"
-  ],
-  "Internet & Services|Requirement|SDM": [
-    "Detection-level Internet & Services Requirement",
-    "To be filled"
-  ],
-
-  "Internet & Services|Challenge|SUM": [
-    "User-level Internet & Services Challenge",
-    "To be filled"
-  ],
-  "Internet & Services|Challenge|SAM": [
-    "Application-level Internet & Services Challenge",
-    "To be filled"
-  ],
-  "Internet & Services|Challenge|SPM": [
-    "Platform-level Internet & Services Challenge",
-    "To be filled"
-  ],
-  "Internet & Services|Challenge|SRM": [
-    "Rules-level Internet & Services Challenge",
-    "To be filled"
-  ],
-  "Internet & Services|Challenge|SDM": [
-    "Detection-level Internet & Services Challenge",
-    "To be filled"
-  ],
-
-  "Internet & Services|Issue|SUM": [
-    "User-level Internet & Services Issue",
-    "To be filled"
-  ],
-  "Internet & Services|Issue|SAM": [
-    "Application-level Internet & Services Issue",
-    "To be filled"
-  ],
-  "Internet & Services|Issue|SPM": [
-    "Platform-level Internet & Services Issue",
-    "To be filled"
-  ],
-  "Internet & Services|Issue|SRM": [
-    "Rules-level Internet & Services Issue",
-    "To be filled"
-  ],
-  "Internet & Services|Issue|SDM": [
-    "Detection-level Internet & Services Issue",
-    "To be filled"
-  ],
-
-  "Internet & Services|Solution|SUM": [
-    "User-level Internet & Services Solution",
-    "To be filled"
-  ],
-  "Internet & Services|Solution|SAM": [
-    "Application-level Internet & Services Solution",
-    "To be filled"
-  ],
-  "Internet & Services|Solution|SPM": [
-    "Platform-level Internet & Services Solution",
-    "To be filled"
-  ],
-  "Internet & Services|Solution|SRM": [
-    "Rules-level Internet & Services Solution",
-    "To be filled"
-  ],
-  "Internet & Services|Solution|SDM": [
-    "Detection-level Internet & Services Solution",
-    "To be filled"
-  ],
-
-  "Network|Requirement|SUM": ["User-level Network Requirement", "To be filled"],
-  "Network|Requirement|SAM": ["Application-level Network Requirement", "To be filled"],
-  "Network|Requirement|SPM": ["Platform-level Network Requirement", "To be filled"],
-  "Network|Requirement|SRM": ["Rules-level Network Requirement", "To be filled"],
-  "Network|Requirement|SDM": ["Detection-level Network Requirement", "To be filled"],
-
-  "Network|Challenge|SUM": ["User-level Network Challenge", "To be filled"],
-  "Network|Challenge|SAM": ["Application-level Network Challenge", "To be filled"],
-  "Network|Challenge|SPM": ["Platform-level Network Challenge", "To be filled"],
-  "Network|Challenge|SRM": ["Rules-level Network Challenge", "To be filled"],
-  "Network|Challenge|SDM": ["Detection-level Network Challenge", "To be filled"],
-
-  "Network|Issue|SUM": ["User-level Network Issue", "To be filled"],
-  "Network|Issue|SAM": ["Application-level Network Issue", "To be filled"],
-  "Network|Issue|SPM": ["Platform-level Network Issue", "To be filled"],
-  "Network|Issue|SRM": ["Rules-level Network Issue", "To be filled"],
-  "Network|Issue|SDM": ["Detection-level Network Issue", "To be filled"],
-
-  "Network|Solution|SUM": ["User-level Network Solution", "To be filled"],
-  "Network|Solution|SAM": ["Application-level Network Solution", "To be filled"],
-  "Network|Solution|SPM": ["Platform-level Network Solution", "To be filled"],
-  "Network|Solution|SRM": ["Rules-level Network Solution", "To be filled"],
-  "Network|Solution|SDM": ["Detection-level Network Solution", "To be filled"],
-
-  "Access Control|Requirement|SUM": ["User-level Access Control Requirement", "To be filled"],
-  "Access Control|Requirement|SAM": ["Application-level Access Control Requirement", "To be filled"],
-  "Access Control|Requirement|SPM": ["Platform-level Access Control Requirement", "To be filled"],
-  "Access Control|Requirement|SRM": ["Rules-level Access Control Requirement", "To be filled"],
-  "Access Control|Requirement|SDM": ["Detection-level Access Control Requirement", "To be filled"],
-
-  "Access Control|Challenge|SUM": ["User-level Access Control Challenge", "To be filled"],
-  "Access Control|Challenge|SAM": ["Application-level Access Control Challenge", "To be filled"],
-  "Access Control|Challenge|SPM": ["Platform-level Access Control Challenge", "To be filled"],
-  "Access Control|Challenge|SRM": ["Rules-level Access Control Challenge", "To be filled"],
-  "Access Control|Challenge|SDM": ["Detection-level Access Control Challenge", "To be filled"],
-
-  "Access Control|Issue|SUM": ["User-level Access Control Issue", "To be filled"],
-  "Access Control|Issue|SAM": ["Application-level Access Control Issue", "To be filled"],
-  "Access Control|Issue|SPM": ["Platform-level Access Control Issue", "To be filled"],
-  "Access Control|Issue|SRM": ["Rules-level Access Control Issue", "To be filled"],
-  "Access Control|Issue|SDM": ["Detection-level Access Control Issue", "To be filled"],
-
-  "Access Control|Solution|SUM": ["User-level Access Control Solution", "To be filled"],
-  "Access Control|Solution|SAM": ["Application-level Access Control Solution", "To be filled"],
-  "Access Control|Solution|SPM": ["Platform-level Access Control Solution", "To be filled"],
-  "Access Control|Solution|SRM": ["Rules-level Access Control Solution", "To be filled"],
-  "Access Control|Solution|SDM": ["Detection-level Access Control Solution", "To be filled"],
-
-  "Software|Requirement|SUM": ["User-level Software Requirement", "To be filled"],
-  "Software|Requirement|SAM": ["Application-level Software Requirement", "To be filled"],
-  "Software|Requirement|SPM": ["Platform-level Software Requirement", "To be filled"],
-  "Software|Requirement|SRM": ["Rules-level Software Requirement", "To be filled"],
-  "Software|Requirement|SDM": ["Detection-level Software Requirement", "To be filled"],
-
-  "Software|Challenge|SUM": ["User-level Software Challenge", "To be filled"],
-  "Software|Challenge|SAM": ["Application-level Software Challenge", "To be filled"],
-  "Software|Challenge|SPM": ["Platform-level Software Challenge", "To be filled"],
-  "Software|Challenge|SRM": ["Rules-level Software Challenge", "To be filled"],
-  "Software|Challenge|SDM": ["Detection-level Software Challenge", "To be filled"],
-
-  "Software|Issue|SUM": ["User-level Software Issue", "To be filled"],
-  "Software|Issue|SAM": ["Application-level Software Issue", "To be filled"],
-  "Software|Issue|SPM": ["Platform-level Software Issue", "To be filled"],
-  "Software|Issue|SRM": ["Rules-level Software Issue", "To be filled"],
-  "Software|Issue|SDM": ["Detection-level Software Issue", "To be filled"],
-
-  "Software|Solution|SUM": ["User-level Software Solution", "To be filled"],
-  "Software|Solution|SAM": ["Application-level Software Solution", "To be filled"],
-  "Software|Solution|SPM": ["Platform-level Software Solution", "To be filled"],
-  "Software|Solution|SRM": ["Rules-level Software Solution", "To be filled"],
-  "Software|Solution|SDM": ["Detection-level Software Solution", "To be filled"],
-
-  "Trust Management|Requirement|SUM": ["User-level Trust Management Requirement", "To be filled"],
-  "Trust Management|Requirement|SAM": ["Application-level Trust Management Requirement", "To be filled"],
-  "Trust Management|Requirement|SPM": ["Platform-level Trust Management Requirement", "To be filled"],
-  "Trust Management|Requirement|SRM": ["Rules-level Trust Management Requirement", "To be filled"],
-  "Trust Management|Requirement|SDM": ["Detection-level Trust Management Requirement", "To be filled"],
-
-  "Trust Management|Challenge|SUM": ["User-level Trust Management Challenge", "To be filled"],
-  "Trust Management|Challenge|SAM": ["Application-level Trust Management Challenge", "To be filled"],
-  "Trust Management|Challenge|SPM": ["Platform-level Trust Management Challenge", "To be filled"],
-  "Trust Management|Challenge|SRM": ["Rules-level Trust Management Challenge", "To be filled"],
-  "Trust Management|Challenge|SDM": ["Detection-level Trust Management Challenge", "To be filled"],
-
-  "Trust Management|Issue|SUM": ["User-level Trust Management Issue", "To be filled"],
-  "Trust Management|Issue|SAM": ["Application-level Trust Management Issue", "To be filled"],
-  "Trust Management|Issue|SPM": ["Platform-level Trust Management Issue", "To be filled"],
-  "Trust Management|Issue|SRM": ["Rules-level Trust Management Issue", "To be filled"],
-  "Trust Management|Issue|SDM": ["Detection-level Trust Management Issue", "To be filled"],
-
-  "Trust Management|Solution|SUM": ["User-level Trust Management Solution", "To be filled"],
-  "Trust Management|Solution|SAM": ["Application-level Trust Management Solution", "To be filled"],
-  "Trust Management|Solution|SPM": ["Platform-level Trust Management Solution", "To be filled"],
-  "Trust Management|Solution|SRM": ["Rules-level Trust Management Solution", "To be filled"],
-  "Trust Management|Solution|SDM": ["Detection-level Trust Management Solution", "To be filled"],
-
-  "Compliance & Legal|Requirement|SUM": ["User-level Compliance & Legal Requirement", "To be filled"],
-  "Compliance & Legal|Requirement|SAM": ["Application-level Compliance & Legal Requirement", "To be filled"],
-  "Compliance & Legal|Requirement|SPM": ["Platform-level Compliance & Legal Requirement", "To be filled"],
-  "Compliance & Legal|Requirement|SRM": ["Rules-level Compliance & Legal Requirement", "To be filled"],
-  "Compliance & Legal|Requirement|SDM": ["Detection-level Compliance & Legal Requirement", "To be filled"],
-
-  "Compliance & Legal|Challenge|SUM": ["User-level Compliance & Legal Challenge", "To be filled"],
-  "Compliance & Legal|Challenge|SAM": ["Application-level Compliance & Legal Challenge", "To be filled"],
-  "Compliance & Legal|Challenge|SPM": ["Platform-level Compliance & Legal Challenge", "To be filled"],
-  "Compliance & Legal|Challenge|SRM": ["Rules-level Compliance & Legal Challenge", "To be filled"],
-  "Compliance & Legal|Challenge|SDM": ["Detection-level Compliance & Legal Challenge", "To be filled"],
-
-  "Compliance & Legal|Issue|SUM": ["User-level Compliance & Legal Issue", "To be filled"],
-  "Compliance & Legal|Issue|SAM": ["Application-level Compliance & Legal Issue", "To be filled"],
-  "Compliance & Legal|Issue|SPM": ["Platform-level Compliance & Legal Issue", "To be filled"],
-  "Compliance & Legal|Issue|SRM": ["Rules-level Compliance & Legal Issue", "To be filled"],
-  "Compliance & Legal|Issue|SDM": ["Detection-level Compliance & Legal Issue", "To be filled"],
-
-  "Compliance & Legal|Solution|SUM": ["User-level Compliance & Legal Solution", "To be filled"],
-  "Compliance & Legal|Solution|SAM": ["Application-level Compliance & Legal Solution", "To be filled"],
-  "Compliance & Legal|Solution|SPM": ["Platform-level Compliance & Legal Solution", "To be filled"],
-  "Compliance & Legal|Solution|SRM": ["Rules-level Compliance & Legal Solution", "To be filled"],
-  "Compliance & Legal|Solution|SDM": ["Detection-level Compliance & Legal Solution", "To be filled"]
+    "tags": [
+      "privacy",
+      "transparency",
+      "consent",
+      "user-control"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Requirement|SAM": {
+    "title": "Application-level Data & Computation Requirement",
+    "sections": [
+      {
+        "headline": "Application-level requirements for secure data processing pipelines and protection against manipulation.",
+        "points": [
+          {
+            "label": "Secure processing pipeline",
+            "text": "Applications must enforce secure data processing pipelines.",
+            "example": ""
+          },
+          {
+            "label": "Encryption in transit and at rest",
+            "text": "Sensitive data must be encrypted in transit and at rest (as implemented/used by the application).",
+            "example": ""
+          },
+          {
+            "label": "Validation against manipulation",
+            "text": "Data validation must prevent injection and manipulation attacks.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "secure-processing",
+      "encryption",
+      "input-validation"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Requirement|SPM": {
+    "title": "Platform-level Data & Computation Requirement",
+    "sections": [
+      {
+        "headline": "Platform-level requirements for isolation and side-channel resistant computation resources and mediated data exchange.",
+        "points": [
+          {
+            "label": "Tenant isolation",
+            "text": "The platform must isolate workloads across tenants.",
+            "example": ""
+          },
+          {
+            "label": "Side-channel resistance",
+            "text": "Computational resources must prevent side-channel leakage.",
+            "example": ""
+          },
+          {
+            "label": "Mediated service data exchange",
+            "text": "Secure APIs must mediate data exchange between services.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "isolation",
+      "side-channels",
+      "platform-apis"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Requirement|SRM": {
+    "title": "Rules-level Data & Computation Requirement",
+    "sections": [
+      {
+        "headline": "Rule/policy-level requirements governing data access and processing constraints.",
+        "points": [
+          {
+            "label": "Least privilege access",
+            "text": "Data access policies must enforce least-privilege constraints.",
+            "example": ""
+          },
+          {
+            "label": "Compliance-aligned processing rules",
+            "text": "Processing rules must align with regulatory compliance policies.",
+            "example": ""
+          },
+          {
+            "label": "Cross-boundary flow constraints",
+            "text": "Formal constraints must govern cross-boundary data flows.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "policy",
+      "least-privilege",
+      "compliance",
+      "data-flows"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Requirement|SDM": {
+    "title": "Detection-level Data & Computation Requirement",
+    "sections": [
+      {
+        "headline": "Detection/monitoring requirements for anomalous access, integrity deviations, and forensics.",
+        "points": [
+          {
+            "label": "Detect anomalous data access",
+            "text": "Monitoring mechanisms must detect anomalous data access.",
+            "example": ""
+          },
+          {
+            "label": "Detect unauthorized computation changes",
+            "text": "Integrity checks must detect unauthorized computation changes.",
+            "example": ""
+          },
+          {
+            "label": "Forensic logging",
+            "text": "Logging mechanisms must support forensic investigation.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "monitoring",
+      "integrity-checks",
+      "logging",
+      "forensics"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Challenge|SUM": {
+    "title": "User-level Data & Computation Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Challenge|SAM": {
+    "title": "Application-level Data & Computation Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Challenge|SPM": {
+    "title": "Platform-level Data & Computation Challenge",
+    "sections": [
+      {
+        "headline": "Ensuring trustworthiness and correctness of computation nodes in distributed systems is difficult.",
+        "points": [
+          {
+            "label": "Opaque execution on dynamic infrastructure",
+            "text": "Compute nodes may be dynamically provisioned from shared infrastructure; the client cannot directly verify faithful execution.",
+            "example": "In a cloud-based distributed analytics system, compute nodes are provisioned on-demand; the client cannot verify whether each node executed the assigned computation correctly."
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "distributed-computation",
+      "trustworthiness",
+      "verification"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Challenge|SRM": {
+    "title": "Rules-level Data & Computation Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Challenge|SDM": {
+    "title": "Detection-level Data & Computation Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Issue|SUM": {
+    "title": "User-level Data & Computation Issue",
+    "sections": [
+      {
+        "headline": "From the user perspective, data integrity and confidentiality may be at risk when computation/storage is outsourced.",
+        "points": [
+          {
+            "label": "Integrity risk",
+            "text": "Users may receive incorrect outputs if integrity is not ensured end-to-end.",
+            "example": ""
+          },
+          {
+            "label": "Confidentiality risk",
+            "text": "Users may lose assurance that personal/sensitive data remains confidential in outsourced environments.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "integrity",
+      "confidentiality",
+      "user-impact"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Issue|SAM": {
+    "title": "Application-level Data & Computation Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Issue|SPM": {
+    "title": "Platform-level Data & Computation Issue",
+    "sections": [
+      {
+        "headline": "Integrity of distributed computation is not guaranteed because execution occurs in an untrusted environment.",
+        "points": [
+          {
+            "label": "Malicious node result manipulation",
+            "text": "A computation node intentionally alters intermediate or final outputs returned to the coordinator/aggregator.",
+            "example": "A compromised cloud VM modifies partial results before they are returned to the coordinator."
+          },
+          {
+            "label": "Compromised execution environment",
+            "text": "OS/runtime compromise enables silent tampering with computations and intermediate data.",
+            "example": "An attacker gains root access to a cloud VM participating in distributed processing and modifies intermediate dataset values before they are returned to the coordinator."
+          },
+          {
+            "label": "Data shuffle/inter-node tampering without integrity protection",
+            "text": "Data exchanged between workers (shuffle/transfer) can be modified when integrity protection is missing or disabled.",
+            "example": "In a misconfigured cluster without data integrity verification, an attacker intercepts shuffle traffic and injects altered partition data."
+          },
+          {
+            "label": "Byzantine worker behavior",
+            "text": "A worker behaves arbitrarily/maliciously while outputs remain plausible, corrupting global computation.",
+            "example": "In distributed machine learning, a node sends crafted gradient updates that subtly bias the model outcome toward adversarial objectives."
+          },
+          {
+            "label": "Remote data storage loss of control",
+            "text": "Outsourcing storage reduces direct control over remotely stored data and its integrity/state.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "integrity",
+      "untrusted-computing",
+      "malicious-nodes",
+      "misconfiguration",
+      "distributed-systems",
+      "storage"
+    ],
+    "refs": []
+  },
+  "Data & Computation|Issue|SRM": {
+    "title": "Rules-level Data & Computation Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Issue|SDM": {
+    "title": "Detection-level Data & Computation Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Solution|SUM": {
+    "title": "User-level Data & Computation Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Solution|SAM": {
+    "title": "Application-level Data & Computation Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Solution|SPM": {
+    "title": "Platform-level Data & Computation Solution",
+    "sections": [
+      {
+        "headline": "Example protocol-level solutions for cloud data storage integrity.",
+        "points": [
+          {
+            "label": "Remote data integrity verification protocol (Kumar & Subramanian, 2011)",
+            "text": "Based on Elliptic Curve Cryptography and Sobol sequence; periodically verifies integrity of data stored at the CSP without retrieving the original data and generates probabilistic proofs of integrity.",
+            "example": ""
+          }
+        ]
+      }
+    ],
+    "tags": [
+      "storage-integrity",
+      "ECC",
+      "probabilistic-proof"
+    ],
+    "refs": [
+      {
+        "cite": "KumarSubramanian2011",
+        "note": "Syam Kumar P, Subramanian R (2011). An Efficient and Secure Protocol for Ensuring Data Storage Security in Cloud Computing. IJCSI 8(6-1):261–274."
+      }
+    ]
+  },
+  "Data & Computation|Solution|SRM": {
+    "title": "Rules-level Data & Computation Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Data & Computation|Solution|SDM": {
+    "title": "Detection-level Data & Computation Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Requirement|SUM": {
+    "title": "User-level Virtualization Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Requirement|SAM": {
+    "title": "Application-level Virtualization Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Requirement|SPM": {
+    "title": "Platform-level Virtualization Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Requirement|SRM": {
+    "title": "Rules-level Virtualization Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Requirement|SDM": {
+    "title": "Detection-level Virtualization Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Challenge|SUM": {
+    "title": "User-level Virtualization Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Challenge|SAM": {
+    "title": "Application-level Virtualization Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Challenge|SPM": {
+    "title": "Platform-level Virtualization Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Challenge|SRM": {
+    "title": "Rules-level Virtualization Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Challenge|SDM": {
+    "title": "Detection-level Virtualization Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Issue|SUM": {
+    "title": "User-level Virtualization Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Issue|SAM": {
+    "title": "Application-level Virtualization Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Issue|SPM": {
+    "title": "Platform-level Virtualization Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Issue|SRM": {
+    "title": "Rules-level Virtualization Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Issue|SDM": {
+    "title": "Detection-level Virtualization Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Solution|SUM": {
+    "title": "User-level Virtualization Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Solution|SAM": {
+    "title": "Application-level Virtualization Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Solution|SPM": {
+    "title": "Platform-level Virtualization Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Solution|SRM": {
+    "title": "Rules-level Virtualization Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Virtualization|Solution|SDM": {
+    "title": "Detection-level Virtualization Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Requirement|SUM": {
+    "title": "User-level Internet & Services Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Requirement|SAM": {
+    "title": "Application-level Internet & Services Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Requirement|SPM": {
+    "title": "Platform-level Internet & Services Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Requirement|SRM": {
+    "title": "Rules-level Internet & Services Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Requirement|SDM": {
+    "title": "Detection-level Internet & Services Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Challenge|SUM": {
+    "title": "User-level Internet & Services Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Challenge|SAM": {
+    "title": "Application-level Internet & Services Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Challenge|SPM": {
+    "title": "Platform-level Internet & Services Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Challenge|SRM": {
+    "title": "Rules-level Internet & Services Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Challenge|SDM": {
+    "title": "Detection-level Internet & Services Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Issue|SUM": {
+    "title": "User-level Internet & Services Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Issue|SAM": {
+    "title": "Application-level Internet & Services Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Issue|SPM": {
+    "title": "Platform-level Internet & Services Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Issue|SRM": {
+    "title": "Rules-level Internet & Services Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Issue|SDM": {
+    "title": "Detection-level Internet & Services Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Solution|SUM": {
+    "title": "User-level Internet & Services Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Solution|SAM": {
+    "title": "Application-level Internet & Services Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Solution|SPM": {
+    "title": "Platform-level Internet & Services Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Solution|SRM": {
+    "title": "Rules-level Internet & Services Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Internet & Services|Solution|SDM": {
+    "title": "Detection-level Internet & Services Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Requirement|SUM": {
+    "title": "User-level Network Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Requirement|SAM": {
+    "title": "Application-level Network Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Requirement|SPM": {
+    "title": "Platform-level Network Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Requirement|SRM": {
+    "title": "Rules-level Network Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Requirement|SDM": {
+    "title": "Detection-level Network Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Challenge|SUM": {
+    "title": "User-level Network Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Challenge|SAM": {
+    "title": "Application-level Network Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Challenge|SPM": {
+    "title": "Platform-level Network Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Challenge|SRM": {
+    "title": "Rules-level Network Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Challenge|SDM": {
+    "title": "Detection-level Network Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Issue|SUM": {
+    "title": "User-level Network Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Issue|SAM": {
+    "title": "Application-level Network Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Issue|SPM": {
+    "title": "Platform-level Network Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Issue|SRM": {
+    "title": "Rules-level Network Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Issue|SDM": {
+    "title": "Detection-level Network Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Solution|SUM": {
+    "title": "User-level Network Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Solution|SAM": {
+    "title": "Application-level Network Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Solution|SPM": {
+    "title": "Platform-level Network Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Solution|SRM": {
+    "title": "Rules-level Network Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Network|Solution|SDM": {
+    "title": "Detection-level Network Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Requirement|SUM": {
+    "title": "User-level Access Control Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Requirement|SAM": {
+    "title": "Application-level Access Control Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Requirement|SPM": {
+    "title": "Platform-level Access Control Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Requirement|SRM": {
+    "title": "Rules-level Access Control Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Requirement|SDM": {
+    "title": "Detection-level Access Control Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Challenge|SUM": {
+    "title": "User-level Access Control Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Challenge|SAM": {
+    "title": "Application-level Access Control Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Challenge|SPM": {
+    "title": "Platform-level Access Control Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Challenge|SRM": {
+    "title": "Rules-level Access Control Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Challenge|SDM": {
+    "title": "Detection-level Access Control Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Issue|SUM": {
+    "title": "User-level Access Control Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Issue|SAM": {
+    "title": "Application-level Access Control Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Issue|SPM": {
+    "title": "Platform-level Access Control Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Issue|SRM": {
+    "title": "Rules-level Access Control Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Issue|SDM": {
+    "title": "Detection-level Access Control Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Solution|SUM": {
+    "title": "User-level Access Control Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Solution|SAM": {
+    "title": "Application-level Access Control Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Solution|SPM": {
+    "title": "Platform-level Access Control Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Solution|SRM": {
+    "title": "Rules-level Access Control Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Access Control|Solution|SDM": {
+    "title": "Detection-level Access Control Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Requirement|SUM": {
+    "title": "User-level Software Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Requirement|SAM": {
+    "title": "Application-level Software Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Requirement|SPM": {
+    "title": "Platform-level Software Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Requirement|SRM": {
+    "title": "Rules-level Software Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Requirement|SDM": {
+    "title": "Detection-level Software Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Challenge|SUM": {
+    "title": "User-level Software Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Challenge|SAM": {
+    "title": "Application-level Software Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Challenge|SPM": {
+    "title": "Platform-level Software Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Challenge|SRM": {
+    "title": "Rules-level Software Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Challenge|SDM": {
+    "title": "Detection-level Software Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Issue|SUM": {
+    "title": "User-level Software Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Issue|SAM": {
+    "title": "Application-level Software Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Issue|SPM": {
+    "title": "Platform-level Software Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Issue|SRM": {
+    "title": "Rules-level Software Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Issue|SDM": {
+    "title": "Detection-level Software Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Solution|SUM": {
+    "title": "User-level Software Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Solution|SAM": {
+    "title": "Application-level Software Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Solution|SPM": {
+    "title": "Platform-level Software Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Solution|SRM": {
+    "title": "Rules-level Software Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Software|Solution|SDM": {
+    "title": "Detection-level Software Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Requirement|SUM": {
+    "title": "User-level Trust Management Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Requirement|SAM": {
+    "title": "Application-level Trust Management Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Requirement|SPM": {
+    "title": "Platform-level Trust Management Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Requirement|SRM": {
+    "title": "Rules-level Trust Management Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Requirement|SDM": {
+    "title": "Detection-level Trust Management Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Challenge|SUM": {
+    "title": "User-level Trust Management Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Challenge|SAM": {
+    "title": "Application-level Trust Management Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Challenge|SPM": {
+    "title": "Platform-level Trust Management Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Challenge|SRM": {
+    "title": "Rules-level Trust Management Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Challenge|SDM": {
+    "title": "Detection-level Trust Management Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Issue|SUM": {
+    "title": "User-level Trust Management Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Issue|SAM": {
+    "title": "Application-level Trust Management Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Issue|SPM": {
+    "title": "Platform-level Trust Management Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Issue|SRM": {
+    "title": "Rules-level Trust Management Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Issue|SDM": {
+    "title": "Detection-level Trust Management Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Solution|SUM": {
+    "title": "User-level Trust Management Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Solution|SAM": {
+    "title": "Application-level Trust Management Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Solution|SPM": {
+    "title": "Platform-level Trust Management Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Solution|SRM": {
+    "title": "Rules-level Trust Management Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Trust Management|Solution|SDM": {
+    "title": "Detection-level Trust Management Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Requirement|SUM": {
+    "title": "User-level Compliance & Legal Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Requirement|SAM": {
+    "title": "Application-level Compliance & Legal Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Requirement|SPM": {
+    "title": "Platform-level Compliance & Legal Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Requirement|SRM": {
+    "title": "Rules-level Compliance & Legal Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Requirement|SDM": {
+    "title": "Detection-level Compliance & Legal Requirement",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Challenge|SUM": {
+    "title": "User-level Compliance & Legal Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Challenge|SAM": {
+    "title": "Application-level Compliance & Legal Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Challenge|SPM": {
+    "title": "Platform-level Compliance & Legal Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Challenge|SRM": {
+    "title": "Rules-level Compliance & Legal Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Challenge|SDM": {
+    "title": "Detection-level Compliance & Legal Challenge",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Issue|SUM": {
+    "title": "User-level Compliance & Legal Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Issue|SAM": {
+    "title": "Application-level Compliance & Legal Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Issue|SPM": {
+    "title": "Platform-level Compliance & Legal Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Issue|SRM": {
+    "title": "Rules-level Compliance & Legal Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Issue|SDM": {
+    "title": "Detection-level Compliance & Legal Issue",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Solution|SUM": {
+    "title": "User-level Compliance & Legal Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Solution|SAM": {
+    "title": "Application-level Compliance & Legal Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Solution|SPM": {
+    "title": "Platform-level Compliance & Legal Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Solution|SRM": {
+    "title": "Rules-level Compliance & Legal Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  },
+  "Compliance & Legal|Solution|SDM": {
+    "title": "Detection-level Compliance & Legal Solution",
+    "sections": [
+      {
+        "headline": "To be filled",
+        "points": []
+      }
+    ],
+    "tags": [],
+    "refs": []
+  }
 }
