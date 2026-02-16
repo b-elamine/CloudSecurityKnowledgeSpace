@@ -88,7 +88,8 @@
   ],
   "Data & Computation|Solution|SPM": [
     "Platform-level Data & Computation Solution:",
-    "To be filled"
+    "- Efficient and Secure Protocol for Ensuring Data Storage Security (Syam Kumar P, Subramanian R - 2011) : (Based on Elliptic Curve Cryptography and Sobol Sequence, periodically verify the data integrity stored at CSP without retrieving original data and generate probabilistic proofs of integrity)",
+    "- "
   ],
   "Data & Computation|Solution|SRM": [
     "Rules-level Data & Computation Solution:",
